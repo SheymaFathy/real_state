@@ -1,6 +1,5 @@
 import '../../data/model/unit_model.dart';
 
-
 abstract class UnitState {}
 
 class UnitInitial extends UnitState {}

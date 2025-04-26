@@ -12,13 +12,6 @@ import 'core/helper/routes.dart';
 import 'core/shared_preferences/cach_helper.dart';
 import 'core/theme/theme_cubit.dart';
 import 'core/theme/theme_status.dart';
-import 'features/auth/login/pre/view/login_screen.dart';
-import 'features/auth/profile/pre/view/profile_page.dart';
-import 'features/main_screen/pages/home/pre/view/home_page.dart';
-import 'features/main_screen/pages/my_fav/pre/view/my_favorite.dart';
-import 'features/main_screen/pre/view/main_screen.dart';
-import 'features/property_details/pre/view/prperty_details.dart';
-import 'features/splash/pre/view/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,7 +29,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<LanguageCubit>(create: (_) => LanguageCubit()),
         BlocProvider<ThemeCubit>(create: (_) => ThemeCubit()),
-        BlocProvider<UnitCubit>(create: (_) => UnitCubit(HomeRepository())),
+        BlocProvider<UnitCubit>(create: (_) => UnitCubit(UnitRepository())),
       ],
       child: BlocBuilder<ThemeCubit, ThemeState>(
         builder: (context, themeState) {
@@ -47,7 +40,8 @@ class MyApp extends StatelessWidget {
                 minTextAdapt: true,
                 splitScreenMode: true,
                 builder: (context, child) {
-                  return MaterialApp(
+                  return MaterialApp.router(
+                    routerConfig: AppRoutes.router,
                     debugShowCheckedModeBanner: false,
                     locale: languageState.locale,
                     supportedLocales: const [Locale('en'), Locale('ar')],
@@ -64,16 +58,7 @@ class MyApp extends StatelessWidget {
                     darkTheme: ThemeData.dark().copyWith(
                       scaffoldBackgroundColor: AppColors.darkPrimary,
                     ),
-                    initialRoute: AppRoutes.mainScreen ,
-                    routes: {
-                      AppRoutes.mainScreen: (context) => MainScreen(),
-                      AppRoutes.splash: (context) => const SplashScreen(),
-                      AppRoutes.login: (context) => LoginScreen(),
-                      AppRoutes.home: (context) => HomePage(),
-                      AppRoutes.myFavorite: (context) => const MyFavorite(),
-                      AppRoutes.profile: (context) => const ProfilePage(),
-                      AppRoutes.propertyDetails:(context) => const PropertyDetails(),
-                    },
+
                   );
                 },
               );

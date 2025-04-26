@@ -19,5 +19,6 @@
     "login":"Login",
     "email":"Email",
     "password":"Password",
-    "hello_user":"Welcome to our app"
+    "hello_user":"Welcome to our app",
+    "show_More":"Show More"
 }

@@ -1,20 +1,32 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:real_state/features/main_screen/pages/home/data/repo/home_repo.dart'
-    show HomeRepository;
-
+import '../../data/repo/home_repo.dart';
 import 'home_state.dart';
 
 class UnitCubit extends Cubit<UnitState> {
-  final HomeRepository repository;
+  final UnitRepository unitRepository;
 
-  UnitCubit(this.repository) : super(UnitInitial());
-  Future<void> getUnits() async {
+  UnitCubit(this.unitRepository) : super(UnitInitial());
+  // get all units
+  Future<void> fetchUnits() async {
     emit(UnitLoading());
     try {
-      final units = await repository.fetchUnits();
+      final units = await unitRepository.getAllUnits();
       emit(UnitLoaded(units));
     } catch (e) {
-      emit(UnitError('فشل في تحميل الوحدات'));
+      emit(UnitError(e.toString()));
+    }
+  }
+
+
+
+  // get unit details
+  Future<void> fetchUnitDetails(int id) async {
+    try {
+      emit(UnitLoading());
+      final unitDetails = await unitRepository.getUnitDetails(id);
+      emit(UnitLoaded([unitDetails.first]));
+        } catch (e) {
+      emit(UnitError("حدث خطأ: $e"));
     }
   }
 }

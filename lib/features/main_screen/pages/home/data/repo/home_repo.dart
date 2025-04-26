@@ -1,32 +1,39 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../../../../../auth/login/data/storage_helper.dart';
 import '../model/unit_model.dart';
 
-class HomeRepository {
-  Future<List<UnitModel>> fetchUnits() async {
-    final token = await StorageHelper.getToken();
-
-    final url = Uri.parse(
-      'https://propertyproapi.runasp.net/Units/Get-All-Units?page=1&pageSize=50',
-    );
-
+class UnitRepository {
+  // get all units
+  Future<List<UnitModel>> getAllUnits() async {
     final response = await http.get(
-      url,
-      headers: {
-        'accept': '*/*',
-        'Authorization': 'Bearer $token',
-      },
+      Uri.parse("https://propertyapi.runasp.net/Units/Get-All-Units"),
     );
-
-    print('Status: ${response.statusCode}');
-    print('Body: ${response.body}');
 
     if (response.statusCode == 200) {
-      final List<dynamic> jsonData = json.decode(response.body);
-      return jsonData.map((unitJson) => UnitModel.fromJson(unitJson)).toList();
+      final decoded = json.decode(response.body);
+      final List<dynamic> data = decoded["data"];
+      return data.map((json) => UnitModel.fromJson(json)).toList();
     } else {
-      throw Exception('فشل في تحميل الوحدات');
+      throw Exception("Failed to fetch units");
+    }
+  }
+
+
+// get unit details
+  Future<List<UnitModel>> getUnitDetails(int id) async {
+    final response = await http.get(
+      Uri.parse("https://propertyapi.runasp.net/Units/$id"),
+    );
+    if (response.statusCode == 200) {
+      final decoded = json.decode(response.body);
+      if (decoded['data'] != null && decoded['data'] is List) {
+        final List<dynamic> data = decoded["data"];
+        return data.map((json) => UnitModel.fromJson(json)).toList();
+      } else {
+        throw Exception("البيانات غير صحيحة أو غير موجودة");
+      }
+    } else {
+      throw Exception("فشل في جلب التفاصيل");
     }
   }
 }

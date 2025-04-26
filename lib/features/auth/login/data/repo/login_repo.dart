@@ -1,23 +1,21 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class LoginRepository {
   Future<Map<String, dynamic>?> login({
     required String email,
     required String password,
-    required String token, // إضافة المتغير token
+    required String token,
   }) async {
     try {
       var uri = Uri.parse('https://propertyproapi.runasp.net/Auth/login');
-
-      // الرؤوس الخاصة بالطلب
       var headers = {
         'accept': '*/*',
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token', // إضافة الـ Bearer token هنا
+        'Authorization': 'Bearer $token',
       };
 
-      // إرسال الطلب عبر POST مع البيانات في الـ Body
       var response = await http.post(
         uri,
         headers: headers,
@@ -28,11 +26,15 @@ class LoginRepository {
       );
 
       if (response.statusCode == 200) {
-        print("Login Success: ${response.body}");
+        if (kDebugMode) {
+          print("Login Success: ${response.body}");
+        }
         final decoded = json.decode(response.body);
         return decoded;
       } else {
-        print("Login Failed: ${response.reasonPhrase}");
+        if (kDebugMode) {
+          print("Login Failed: ${response.reasonPhrase}");
+        }
         return null;
       }
     } catch (e) {
