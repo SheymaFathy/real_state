@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:real_state/core/constants/styles.dart';
 
 class PropertyDetails extends StatelessWidget {
   const PropertyDetails({super.key});
@@ -9,9 +10,10 @@ class PropertyDetails extends StatelessWidget {
       body: Center(
         child: Text(
           "Property Details",
-          style: Theme.of(context).textTheme.headlineMedium,
+          style: AppTextStyles.title(context),
       ),
       ),
     );
   }
 }
+

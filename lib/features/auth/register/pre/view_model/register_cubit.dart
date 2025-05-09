@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:real_state/features/auth/register/pre/view_model/register_state.dart';
@@ -5,7 +7,7 @@ import 'package:real_state/features/auth/register/data/model/register_user_model
 import '../../data/repo/register_repo.dart';
 
 class RegisterCubit extends Cubit<RegisterState> {
- TextEditingController emailController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
@@ -13,7 +15,6 @@ class RegisterCubit extends Cubit<RegisterState> {
   TextEditingController lastNameController = TextEditingController();
   TextEditingController firstNameController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
-
 
   final RegisterRepository _registerRepository;
 
@@ -24,12 +25,9 @@ class RegisterCubit extends Cubit<RegisterState> {
       emit(RegisterLoading());
 
       final response = await _registerRepository.register(user);
-
-        emit(RegisterSuccess("Registration successful"));
-        print(response);
-
+      emit(RegisterSuccess(response['message'] ?? "Registration successful"));
     } catch (e) {
-      emit(RegisterFailure("Registration failed: $e"));
+      emit(RegisterFailure(e.toString().replaceFirst('Exception: ', '')));
     }
   }
 }

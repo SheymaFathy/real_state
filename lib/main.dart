@@ -1,35 +1,51 @@
+// ignore_for_file: depend_on_referenced_packages
+
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:real_state/core/constants/colors.dart';
+import 'package:real_state/core/app_localization/app_localization.dart';
+import 'package:real_state/core/app_localization/language_cubit.dart';
+import 'package:real_state/core/app_localization/language_state.dart';
+import 'package:real_state/core/helper/routes.dart';
+import 'package:real_state/core/shared_preferences/cach_helper.dart';
+import 'package:real_state/core/theme/theme.dart';
+import 'package:real_state/core/theme/theme_cubit.dart';
+import 'package:real_state/core/theme/theme_status.dart';
 import 'package:real_state/features/main_screen/pages/home/data/repo/home_repo.dart';
 import 'package:real_state/features/main_screen/pages/home/pre/view_model/home_cubit.dart';
-import 'core/app_localization/app_localization.dart';
-import 'core/app_localization/language_cubit.dart';
-import 'core/app_localization/language_state.dart';
-import 'core/helper/routes.dart';
-import 'core/shared_preferences/cach_helper.dart';
-import 'core/theme/theme_cubit.dart';
-import 'core/theme/theme_status.dart';
+
+import 'features/main_screen/pages/comments/data/repo/comments_repo.dart';
+import 'features/main_screen/pages/comments/pre/view_model/comments_cubit.dart';
+import 'features/onboarding/pre/view_model/onboarding_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await CacheHelper.init();
 
-  runApp(const MyApp());
+  // ✅ استخدام لغة النظام
+  final Locale systemLocale = PlatformDispatcher.instance.locale;
+
+  runApp(MyApp(systemLocale: systemLocale));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final Locale systemLocale;
+  const MyApp({super.key, required this.systemLocale});
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<LanguageCubit>(create: (_) => LanguageCubit()),
+        BlocProvider<LanguageCubit>(create: (_) => LanguageCubit(systemLocale)),
         BlocProvider<ThemeCubit>(create: (_) => ThemeCubit()),
         BlocProvider<UnitCubit>(create: (_) => UnitCubit(UnitRepository())),
+        BlocProvider<OnboardingCubit>(create: (_) => OnboardingCubit()),
+        BlocProvider<CommentCubit>( create: (_) => CommentCubit(
+    commentRepository: CommentRepository(),)
+    ),
       ],
       child: BlocBuilder<ThemeCubit, ThemeState>(
         builder: (context, themeState) {
@@ -51,14 +67,9 @@ class MyApp extends StatelessWidget {
                       GlobalWidgetsLocalizations.delegate,
                       GlobalCupertinoLocalizations.delegate,
                     ],
-                    themeMode: themeState.themeMode,
-                    theme: ThemeData.light().copyWith(
-                      scaffoldBackgroundColor: AppColors.white,
-                    ),
-                    darkTheme: ThemeData.dark().copyWith(
-                      scaffoldBackgroundColor: AppColors.darkPrimary,
-                    ),
-
+                    theme: lightTheme(context),
+                    darkTheme: darkTheme(context),
+                    themeMode: ThemeMode.system,
                   );
                 },
               );

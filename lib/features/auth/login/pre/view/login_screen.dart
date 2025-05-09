@@ -1,45 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:real_state/core/constants/app_images.dart';
 import 'package:real_state/core/constants/styles.dart';
-import 'package:real_state/core/helper/context_extensions..dart';
+import 'package:real_state/core/helper/context_extensions.dart';
 import 'package:real_state/core/helper/validator_def.dart';
-import 'package:real_state/core/theme/theme_cubit.dart';
-import 'package:real_state/features/auth/login/data/model/login_user_model.dart';
 import 'package:real_state/features/auth/login/data/repo/login_repo.dart';
-import 'package:real_state/features/auth/register/pre/view/register.dart';
-import 'package:real_state/widgets/custom_text_field.dart';
-import 'package:real_state/widgets/elevated_button_def.dart';
-import '../../../../main_screen/pages/home/pre/view/home_page.dart';
+import 'package:real_state/features/widgets/custom_text_field.dart';
+import '../../../../../core/helper/routes.dart';
+import '../../../../widgets/elevated_button_def.dart';
 import '../view_model/login_cubit.dart';
 import '../view_model/login_state.dart';
 
 class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
+  final String? email;
+  final String? password;
+
+  // Constructor to pass email and password
+  LoginScreen({super.key, this.email, this.password});
 
   final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    final locale = Localizations.localeOf(context);
     final loc = context.loc;
-    final isDark = context.read<ThemeCubit>().state.themeMode == ThemeMode.dark;
-
 
     return BlocProvider(
-      create: (context) => LoginCubit(LoginRepository()),
+      create: (context) {
+        final loginCubit = LoginCubit(LoginRepository());
+
+        // Set the email and password if provided
+        if (email != null) loginCubit.emailController.text = email!;
+        if (password != null) loginCubit.passwordController.text = password!;
+
+        return loginCubit;
+      },
       child: BlocConsumer<LoginCubit, LoginState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state is LoginSuccess) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => HomePage()),
-            );
+            if (context.mounted) {
+              context.go(AppRoutes.mainScreen);
+            }
           } else if (state is LoginFailure) {
-            print(state.message);
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.message)));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
         builder: (context, state) {
@@ -73,10 +76,11 @@ class LoginScreen extends StatelessWidget {
                       child: Form(
                         key: formKey,
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               loc.translate("login"),
-                              style: AppFonts.body(locale, isDark: isDark),
+                              style: AppTextStyles.body(context),
                             ),
                             const SizedBox(height: 10),
                             CustomTextField(
@@ -85,6 +89,7 @@ class LoginScreen extends StatelessWidget {
                               icon: Icons.email_outlined,
                               paddingTop: 10,
                               validator: ValidatorDef.validatorEmail,
+                              isPassword: false,
                             ),
                             const SizedBox(height: 10),
                             CustomTextField(
@@ -93,6 +98,7 @@ class LoginScreen extends StatelessWidget {
                               icon: Icons.lock_outline,
                               paddingTop: 10,
                               validator: ValidatorDef.validatorPassword,
+                              isPassword: true,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -101,54 +107,40 @@ class LoginScreen extends StatelessWidget {
                                   onPressed: () {},
                                   child: Text(
                                     "Forget Password?",
-                                    style: AppFonts.body(
-                                      locale,
-                                      isDark: isDark,
-                                    ),
+                                    style: AppTextStyles.body(context),
                                   ),
                                 ),
                               ],
                             ),
-
-                            /// BlocConsumer for login handling
+                            const SizedBox(height: 10),
                             ElevatedButtonDef(
                               press: () {
                                 if (formKey.currentState!.validate()) {
-                                  BlocProvider.of<LoginCubit>(context).loginUser(
-                                    LoginUserModel(
-                                      email: loginCubit.emailController.text.trim(),
-                                      password: loginCubit.passwordController.text,
-                                    ),
-                                  );
+                                  loginCubit.loginUser(context);
                                 }
                               },
-                              text: state is LoginLoading ? 'Loading...' : 'Login',
+                              text: state is LoginLoading
+                                  ? 'Loading...'
+                                  : 'Login',
                             ),
-
+                            const SizedBox(height: 20),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "Do not have an account?",
-                                  style: AppFonts.body(
-                                    Localizations.localeOf(context),
-                                    isDark: isDark,
+                                  "Don't have an account?",
+                                  style: AppTextStyles.body(
+                                    context,
                                   ).copyWith(fontSize: 13),
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => Register(),
-                                      ),
-                                    );
+                                    context.go(AppRoutes.register);
                                   },
                                   child: Text(
                                     "Create it now",
-                                    style: AppFonts.body(
-                                      locale,
-                                      isDark: isDark,
+                                    style: AppTextStyles.body(
+                                      context,
                                     ).copyWith(fontSize: 13),
                                   ),
                                 ),
@@ -169,7 +161,6 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-// Moved LogoClipper to the top level
 class LogoClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
