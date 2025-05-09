@@ -15,19 +15,25 @@ class Hostting {
 
     // Check if the token is null or empty in a simplified way
     if (token.isEmpty) {
-      return {"Accept": "application/json", "Content-Type": "application/json"};
+      return {"Accept": "*/*", "Content-Type": "application/json"};
     }
 
     return {
-      "Accept": "application/json",
+      "Accept": "*/*",
       "Content-Type": "application/json",
       "Authorization": "Bearer $token",
     };
   }
 
   // API endpoints
+
+  // auth
   static Uri login = Uri.parse("$host/Auth/login");
   static Uri register = Uri.parse("$host/Auth/register");
+  // get data
   static Uri getAllUnits = Uri.parse("$host/Units/Get-All-Units");
+  static Uri hotDealUnits = Uri.parse("$host/Units/Hot-Deals-Units");
+  static Uri unitDetails = Uri.parse("$host/Units/");
+  static Uri addFavorite = Uri.parse("$host/Favorite");
 
 }

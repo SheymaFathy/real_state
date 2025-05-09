@@ -1,42 +1,62 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:real_state/core/constants/styles.dart';
-import 'package:real_state/widgets/elevated_button_def.dart';
+import 'package:real_state/features/main_screen/pages/search/SearchResult.dart';
+import 'package:real_state/features/main_screen/pages/search/widgets/result_card_widget.dart';
 import '../../../../../../../core/constants/colors.dart';
-import '../../../../../../../core/theme/theme_cubit.dart';
+import '../../../../../../widgets/elevated_button_def.dart';
+import '../../../../search/search_set_model.dart';
+import '../../../data/model/unit_model.dart';
+import '../../../../search/search_repo.dart';
 
 class SearchCard extends StatefulWidget {
   const SearchCard({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _SearchCardState createState() => _SearchCardState();
 }
 
 class _SearchCardState extends State<SearchCard> {
-  String selectedFilter = "Select Filter"; // Default text for filter
-  String selectedSort = "Select Sort"; // Default text for sort
+  String selectedFilter = "Select Filter";
+  String selectedSort = "Select Sort";
   TextEditingController locationController = TextEditingController();
+  List<UnitModel> searchResults = [];
+   // This should be populated with actual data
+
+  // Repository instance
+  final SearchRepository _searchRepository = SearchRepository();
+
+  // Search function that calls the API
+  Future<void> searchUnits() async {
+    try {
+      setState(() {
+        //  searchResults = units; // Update the state with the fetched units
+      });
+    } catch (e) {
+      print("Error fetching units: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final locale = Localizations.localeOf(context);
-    final isDark = context.read<ThemeCubit>().state == ThemeMode.dark;
     return Container(
       width: 344.w,
       height: 260.h,
       margin: const EdgeInsets.only(top: 5, left: 15, right: 15),
       padding: const EdgeInsets.only(left: 15, right: 15, top: 5),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backGround(context),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.lightGrey, width: 1),
+        border: Border.all(color: AppColors.backGround(context), width: 1),
         boxShadow: [
           BoxShadow(
             color: Colors.grey,
             spreadRadius: 1,
             blurRadius: 5,
-            offset: const Offset(4, 4), // changes position of shadow
+            offset: const Offset(4, 4),
           ),
         ],
       ),
@@ -47,10 +67,7 @@ class _SearchCardState extends State<SearchCard> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 15, top: 5),
-                child: Text(
-                  "Location",
-                  style: AppFonts.body(locale, isDark: isDark),
-                ),
+                child: Text("Location", style: AppTextStyles.body(context)),
               ),
             ],
           ),
@@ -63,12 +80,11 @@ class _SearchCardState extends State<SearchCard> {
                 vertical: 10.h,
               ),
               hintText: "Dokki, Giza",
-              fillColor: AppColors.lightGrey,
+              fillColor: AppColors.textFieldColor(context),
               filled: true,
-              hintStyle: AppFonts.body(
-                locale,
-                isDark: isDark,
-              ).copyWith(color: AppColors.darkGrey),
+              hintStyle: AppTextStyles.body(
+                context,
+              ).copyWith(color: AppColors.textHintColor(context)),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(50),
                 borderSide: BorderSide.none,
@@ -85,15 +101,22 @@ class _SearchCardState extends State<SearchCard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
+              // Sort Button
               Container(
                 width: 116.w,
                 height: 40.h,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.backGround(context),
                   borderRadius: BorderRadius.circular(14),
                   border: Border(
-                    right: BorderSide(color: AppColors.darkGrey, width: 1),
-                    bottom: BorderSide(color: AppColors.darkGrey, width: 1),
+                    right: BorderSide(
+                      color: AppColors.backGround(context),
+                      width: 1,
+                    ),
+                    bottom: BorderSide(
+                      color: AppColors.backGround(context),
+                      width: 1,
+                    ),
                   ),
                   boxShadow: [
                     BoxShadow(
@@ -120,34 +143,40 @@ class _SearchCardState extends State<SearchCard> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.swap_vert, color: AppColors.darkPrimary),
+                      Icon(Icons.swap_vert, color: AppColors.primary(context)),
                       const SizedBox(width: 8),
                       Text(
                         "Sort",
-                        style: AppFonts.body(
-                          locale,
-                          isDark: isDark,
-                        ).copyWith(color: AppColors.darkText, fontSize: 12.sp),
+                        style: AppTextStyles.body(context).copyWith(
+                          color: AppColors.titleColor(context),
+                          fontSize: 12.sp,
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
               Container(
-                height:
-                    40.h, // تأكد من أن ارتفاع الخط يتطابق مع ارتفاع الكونتينرات
-                width: 1, // تحديد سمك الخط
-                color: AppColors.darkGrey, // تخصيص اللون
+                height: 40.h,
+                width: 1,
+                color: AppColors.titleColor(context),
               ),
+              // Filter Button
               Container(
                 width: 116.w,
                 height: 40.h,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.backGround(context),
                   borderRadius: BorderRadius.circular(14),
                   border: Border(
-                    right: BorderSide(color: AppColors.darkGrey, width: 1),
-                    bottom: BorderSide(color: AppColors.darkGrey, width: 1),
+                    right: BorderSide(
+                      color: AppColors.backGround(context),
+                      width: 1,
+                    ),
+                    bottom: BorderSide(
+                      color: AppColors.backGround(context),
+                      width: 1,
+                    ),
                   ),
                   boxShadow: [
                     BoxShadow(
@@ -174,14 +203,14 @@ class _SearchCardState extends State<SearchCard> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.sort, color: AppColors.darkPrimary),
+                      Icon(Icons.sort, color: AppColors.primary(context)),
                       const SizedBox(width: 8),
                       Text(
                         "Filter",
-                        style: AppFonts.body(
-                          locale,
-                          isDark: isDark,
-                        ).copyWith(color: AppColors.darkText, fontSize: 12.sp),
+                        style: AppTextStyles.body(context).copyWith(
+                          color: AppColors.titleColor(context),
+                          fontSize: 12.sp,
+                        ),
                       ),
                     ],
                   ),
@@ -192,117 +221,36 @@ class _SearchCardState extends State<SearchCard> {
           SizedBox(height: 5.h),
           Divider(),
           SizedBox(height: 5.h),
-          ElevatedButtonDef(press: () {}, text: 'Search'),
+          ElevatedButtonDef(
+            press: () async {
+              SearchSetModel searchSetModel = SearchSetModel(
+                location: locationController.text,
+                page: 1,
+                pageSize: 10,
+                userType: 0,
+                unitType: 0,
+                minPrice: 0,
+                maxPrice: 0,
+                numOfBathrooms: 0,
+                numOfRooms: 0,
+                hotDeals: 0,
+              );
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SearchResult(searchSetModel: searchSetModel),
+                ),
+              );
+            },
+            text: 'Search',
+          ),
+
+
+          if (searchResults.isNotEmpty)
+            ...searchResults.map((unit) => Text(unit.title)),
         ],
       ),
     );
   }
-
-  // // Filter Dialog
-  // void _showFilterDialog(BuildContext context) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: const Text("Filter Options"),
-  //         content: SingleChildScrollView(
-  //           child: ListBody(
-  //             children: [
-  //               ListTile(
-  //                 title: const Text("Location"),
-  //                 onTap: () {
-  //                   setState(() {
-  //                     selectedFilter = "Location";
-  //                   });
-  //                   Navigator.pop(context);
-  //                 },
-  //               ),
-  //               ListTile(
-  //                 title: const Text("Price Range"),
-  //                 onTap: () {
-  //                   setState(() {
-  //                     selectedFilter = "Price Range";
-  //                   });
-  //                   Navigator.pop(context);
-  //                 },
-  //               ),
-  //               ListTile(
-  //                 title: const Text("Property Type"),
-  //                 onTap: () {
-  //                   setState(() {
-  //                     selectedFilter = "Property Type";
-  //                   });
-  //                   Navigator.pop(context);
-  //                 },
-  //               ),
-  //               ListTile(
-  //                 title: const Text("Clear Filter"),
-  //                 onTap: () {
-  //                   setState(() {
-  //                     selectedFilter = "Select Filter";
-  //                   });
-  //                   Navigator.pop(context);
-  //                 },
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-  //
-  // // Sort Dialog
-  // void _showSortDialog(BuildContext context) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: const Text("Sort Options"),
-  //         content: SingleChildScrollView(
-  //           child: ListBody(
-  //             children: [
-  //               ListTile(
-  //                 title: const Text("Price: Low to High"),
-  //                 onTap: () {
-  //                   setState(() {
-  //                     selectedSort = "Price: Low to High";
-  //                   });
-  //                   Navigator.pop(context);
-  //                 },
-  //               ),
-  //               ListTile(
-  //                 title: const Text("Price: High to Low"),
-  //                 onTap: () {
-  //                   setState(() {
-  //                     selectedSort = "Price: High to Low";
-  //                   });
-  //                   Navigator.pop(context);
-  //                 },
-  //               ),
-  //               ListTile(
-  //                 title: const Text("Rating: High to Low"),
-  //                 onTap: () {
-  //                   setState(() {
-  //                     selectedSort = "Rating: High to Low";
-  //                   });
-  //                   Navigator.pop(context);
-  //                 },
-  //               ),
-  //               ListTile(
-  //                 title: const Text("Clear Sort"),
-  //                 onTap: () {
-  //                   setState(() {
-  //                     selectedSort = "Select Sort";
-  //                   });
-  //                   Navigator.pop(context);
-  //                 },
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
 }

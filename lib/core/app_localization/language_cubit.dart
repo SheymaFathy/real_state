@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'language_state.dart';
 
 class LanguageCubit extends Cubit<LanguageState> {
-  LanguageCubit() : super(const LanguageState(Locale('en')));
+  LanguageCubit(Locale systemLocale) : super(LanguageState(systemLocale));
 
   void changeLanguage(String code) {
     emit(LanguageState(Locale(code)));

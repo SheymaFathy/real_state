@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:real_state/widgets/input_decration_def.dart';
+import 'package:real_state/core/constants/colors.dart';
+import 'package:real_state/features/widgets/input_decration_def.dart';
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
@@ -10,7 +11,7 @@ class CustomTextField extends StatelessWidget {
     this.icon,
     this.validator,
     this.keyboard,
-    this.press,
+    this.press, required this.isPassword,
   });
   final String label;
   final IconData? icon;
@@ -19,16 +20,20 @@ class CustomTextField extends StatelessWidget {
   final double paddingTop;
   final TextInputType? keyboard;
   final void Function(String?)? press;
+  final bool isPassword;
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: paddingTop),
       child: TextFormField(
+        style: TextStyle(color: AppColors.titleColor(context)),
         keyboardType: keyboard,
         controller: controller,
         validator: validator,
-
-        decoration: inputDecorationDef(icon ?? Icons.email_outlined, label, context),
+        obscureText: isPassword,
+        decoration: inputDecorationDef(
+            icon ?? Icons.email_outlined,
+            label, context),
         onSaved: (value) {
           controller.text = value!;
         },

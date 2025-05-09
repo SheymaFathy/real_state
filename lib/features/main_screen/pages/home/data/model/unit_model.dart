@@ -1,5 +1,3 @@
-import 'package:intl/intl.dart';
-
 class UnitModel {
   final int id;
   final String title;
@@ -11,8 +9,14 @@ class UnitModel {
   final String address;
   final String imageUrl;
   final DateTime datePosted;
+  final String resourceLink;
+  // final String name;
+  // final String location;
 
-  UnitModel({
+  UnitModel(
+    {
+      // required this.name,
+      // required this.location,
     required this.id,
     required this.title,
     required this.type,
@@ -23,6 +27,7 @@ class UnitModel {
     required this.address,
     required this.imageUrl,
     required this.datePosted,
+    required this.resourceLink,
   });
 
   factory UnitModel.fromJson(Map<String, dynamic> json) {
@@ -30,7 +35,7 @@ class UnitModel {
     DateTime parsedDate;
 
     try {
-      parsedDate = DateFormat("yyyy-MM-dd").parse(dateString, true);
+      parsedDate = DateTime.parse(dateString);
     } catch (e) {
       parsedDate = DateTime(1970, 1, 1);
     }
@@ -39,15 +44,19 @@ class UnitModel {
       id: json['id'],
       title: json['title'],
       type: json['type'],
-      price: json['price'] ,
-      numOfRooms: json['numberOfBedrooms'] ,
-      numOfBathrooms: json['numberOfBathrooms'] ,
-      unitArea: json['unitArea'] ,
+      price: json['price'],
+      numOfRooms: json['numberOfBedrooms'],
+      numOfBathrooms: json['numberOfBathrooms'],
+      unitArea: json['unitArea'],
       address: json['address'],
-      imageUrl: json['images'].isNotEmpty
+      imageUrl: (json['images'] != null && json['images'].isNotEmpty)
           ? "https://propertyapi.runasp.net${json['images'][0]}"
           : "",
       datePosted: parsedDate,
+      resourceLink: json['resourceLink'] ?? '',
+     // name:json["name"],
+     //  location:json["location"],
+
     );
   }
 }

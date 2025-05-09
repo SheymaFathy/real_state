@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:real_state/features/main_screen/pages/home/pre/view/widgets/top_bar_widget.dart';
+import '../../../../../../widgets/title_text.dart';
 import '../../../data/repo/home_repo.dart';
 import '../../view_model/home_cubit.dart';
 import '../../view_model/home_state.dart';
@@ -14,12 +15,22 @@ class AllAdsPage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return BlocProvider<UnitCubit>(
-      create: (_) => UnitCubit(UnitRepository())..fetchUnits(),
+      create: (_) => UnitCubit(UnitRepository())..fetchHotDeals(),
       child: Scaffold(
         body: Column(
           children: [
             SafeArea(
               child: const TopBarWidget(),
+
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: TitleText(title: "Hot Deal"),
+                ),
+              ],
             ),
             Expanded(
               child: BlocBuilder<UnitCubit, UnitState>(

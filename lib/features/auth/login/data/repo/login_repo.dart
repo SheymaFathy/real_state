@@ -1,28 +1,24 @@
-import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
+import '../../../../../core/helper/hosting.dart';
 
 class LoginRepository {
   Future<Map<String, dynamic>?> login({
     required String email,
     required String password,
-    required String token,
   }) async {
     try {
-      var uri = Uri.parse('https://propertyproapi.runasp.net/Auth/login');
-      var headers = {
-        'accept': '*/*',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      };
+      var uri = Hostting.login;
 
+      var headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      };
       var response = await http.post(
         uri,
         headers: headers,
-        body: json.encode({
-          'email': email,
-          'password': password,
-        }),
+        body: json.encode({'email': email, 'password': password}),
       );
 
       if (response.statusCode == 200) {
@@ -33,12 +29,15 @@ class LoginRepository {
         return decoded;
       } else {
         if (kDebugMode) {
-          print("Login Failed: ${response.reasonPhrase}");
+          print("Login Failed: ${response.statusCode}");
+          print("Response Body: ${response.body}");
         }
         return null;
       }
     } catch (e) {
-      print("Error occurred during login: $e");
+      if (kDebugMode) {
+        print("Error occurred during login: $e");
+      }
       return null;
     }
   }

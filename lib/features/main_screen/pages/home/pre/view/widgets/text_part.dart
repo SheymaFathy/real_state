@@ -2,8 +2,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:real_state/core/app_localization/app_localization.dart';
-import '../../../../../../../widgets/comments_grey_text.dart';
-import '../../../../../../../widgets/title_text.dart';
+import '../../../../../../widgets/comments_grey_text.dart';
+import '../../../../../../widgets/title_text.dart';
 
 class HomeTextPart extends StatelessWidget {
   const HomeTextPart({super.key});
