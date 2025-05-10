@@ -1,15 +1,15 @@
 // ignore_for_file: avoid_print
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:real_state/core/constants/styles.dart';
-import 'package:real_state/features/main_screen/pages/search/SearchResult.dart';
-import 'package:real_state/features/main_screen/pages/search/widgets/result_card_widget.dart';
+import 'package:real_state/features/main_screen/pages/search/pre/view/search_result.dart';
+import 'package:real_state/features/main_screen/pages/search/pre/view_model/search_cubit.dart';
 import '../../../../../../../core/constants/colors.dart';
 import '../../../../../../widgets/elevated_button_def.dart';
-import '../../../../search/search_set_model.dart';
+import '../../../../search/data/model/search_set_model.dart';
+import '../../../../search/pre/view/widgets/filter_btm_sheet.dart';
 import '../../../data/model/unit_model.dart';
-import '../../../../search/search_repo.dart';
 
 class SearchCard extends StatefulWidget {
   const SearchCard({super.key});
@@ -21,20 +21,13 @@ class SearchCard extends StatefulWidget {
 
 class _SearchCardState extends State<SearchCard> {
   String selectedFilter = "Select Filter";
-  String selectedSort = "Select Sort";
+  String selectCustomTextFieldSort = "Select Sort";
   TextEditingController locationController = TextEditingController();
   List<UnitModel> searchResults = [];
-   // This should be populated with actual data
 
-  // Repository instance
-  final SearchRepository _searchRepository = SearchRepository();
-
-  // Search function that calls the API
   Future<void> searchUnits() async {
     try {
-      setState(() {
-        //  searchResults = units; // Update the state with the fetched units
-      });
+      setState(() {});
     } catch (e) {
       print("Error fetching units: $e");
     }
@@ -127,7 +120,12 @@ class _SearchCardState extends State<SearchCard> {
                   ],
                 ),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // showModalBottomSheet(
+                    //   context: context,
+                    //   builder: (_) => SortBottomSheet(),
+                    // );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
                     shadowColor: Colors.transparent,
@@ -187,7 +185,17 @@ class _SearchCardState extends State<SearchCard> {
                   ],
                 ),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder:
+                          (_) => FilterBottomSheet(
+                            searchCubit: context.read<SearchCubit>(),
+                            isHome: true,
+                          ),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
                     shadowColor: Colors.transparent,
@@ -239,13 +247,13 @@ class _SearchCardState extends State<SearchCard> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SearchResult(searchSetModel: searchSetModel),
+                  builder:
+                      (context) => SearchResult(searchSetModel: searchSetModel),
                 ),
               );
             },
             text: 'Search',
           ),
-
 
           if (searchResults.isNotEmpty)
             ...searchResults.map((unit) => Text(unit.title)),

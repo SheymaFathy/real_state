@@ -7,8 +7,10 @@ import 'package:real_state/core/helper/context_extensions.dart';
 import 'package:real_state/core/helper/validator_def.dart';
 import 'package:real_state/features/auth/login/data/repo/login_repo.dart';
 import 'package:real_state/features/widgets/custom_text_field.dart';
+import '../../../../../core/constants/colors.dart';
 import '../../../../../core/helper/routes.dart';
 import '../../../../widgets/elevated_button_def.dart';
+import '../../../../widgets/title_text.dart';
 import '../view_model/login_cubit.dart';
 import '../view_model/login_state.dart';
 
@@ -16,7 +18,6 @@ class LoginScreen extends StatelessWidget {
   final String? email;
   final String? password;
 
-  // Constructor to pass email and password
   LoginScreen({super.key, this.email, this.password});
 
   final formKey = GlobalKey<FormState>();
@@ -29,60 +30,83 @@ class LoginScreen extends StatelessWidget {
       create: (context) {
         final loginCubit = LoginCubit(LoginRepository());
 
-        // Set the email and password if provided
         if (email != null) loginCubit.emailController.text = email!;
         if (password != null) loginCubit.passwordController.text = password!;
 
         return loginCubit;
       },
       child: BlocConsumer<LoginCubit, LoginState>(
-        listener: (context, state) async {
+        listener: (context, state) {
           if (state is LoginSuccess) {
-            if (context.mounted) {
-              context.go(AppRoutes.mainScreen);
-            }
+            context.go(AppRoutes.mainScreen);
           } else if (state is LoginFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
           }
         },
         builder: (context, state) {
           final loginCubit = context.read<LoginCubit>();
 
           return Scaffold(
-            body: Column(
-              children: [
-                ClipPath(
-                  clipper: LogoClipper(),
-                  child: Container(
+            body: SafeArea(
+              child: Stack(
+                children: [
+                  // Background
+                  Container(
                     width: double.infinity,
-                    height: 300,
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Color(0xFF4199C3), Colors.white],
-                        begin: Alignment.topRight,
-                        end: Alignment.bottomLeft,
+                    height: 218,
+                    color: AppColors.primary(context),
+                  ),
+
+                  // Top Info Box
+                  Positioned(
+                    top: 120,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: AppColors.backGround(context),
+                        borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(20),
+                          topLeft: Radius.circular(20),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Image.asset(AppImages.topBarImg, width: 116, height: 77),
+                          const SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                loc.translate("login"),
+                                style: AppTextStyles.body(context).copyWith(
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 20,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              TitleText(
+                                title: loc.translate("Welcome_back"),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                    child: Center(
-                      child: Image.asset(AppImages.splash, height: 300),
-                    ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+
+                  // Login Form
+                  Padding(
+                    padding: const EdgeInsets.only(top: 250, left: 16, right: 16),
                     child: SingleChildScrollView(
                       child: Form(
                         key: formKey,
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Text(
-                              loc.translate("login"),
-                              style: AppTextStyles.body(context),
-                            ),
-                            const SizedBox(height: 10),
                             CustomTextField(
                               controller: loginCubit.emailController,
                               label: loc.translate("email"),
@@ -106,7 +130,7 @@ class LoginScreen extends StatelessWidget {
                                 TextButton(
                                   onPressed: () {},
                                   child: Text(
-                                    "Forget Password?",
+                                    loc.translate("forgot_password"),
                                     style: AppTextStyles.body(context),
                                   ),
                                 ),
@@ -120,59 +144,42 @@ class LoginScreen extends StatelessWidget {
                                 }
                               },
                               text: state is LoginLoading
-                                  ? 'Loading...'
-                                  : 'Login',
+                                  ? loc.translate("loading")
+                                  : loc.translate("login"),
                             ),
                             const SizedBox(height: 20),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "Don't have an account?",
-                                  style: AppTextStyles.body(
-                                    context,
-                                  ).copyWith(fontSize: 13),
+                                  loc.translate("Don't have an account?"),
+                                  style: AppTextStyles.body(context)
+                                      .copyWith(fontSize: 13),
                                 ),
                                 TextButton(
                                   onPressed: () {
                                     context.go(AppRoutes.register);
                                   },
                                   child: Text(
-                                    "Create it now",
-                                    style: AppTextStyles.body(
-                                      context,
-                                    ).copyWith(fontSize: 13),
+                                    loc.translate("Create it now"),
+                                    style: AppTextStyles.body(context)
+                                        .copyWith(fontSize: 13),
                                   ),
                                 ),
                               ],
                             ),
+                            const SizedBox(height: 20),
                           ],
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },
       ),
     );
   }
-}
-
-class LogoClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    Path path = Path();
-    path.lineTo(0, size.height - 60);
-    path.quadraticBezierTo(60, size.height, 150, size.height);
-    path.lineTo(size.width, size.height);
-    path.lineTo(size.width, 0);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

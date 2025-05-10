@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:real_state/core/helper/context_extensions.dart';
 
 import '../../../../../core/constants/colors.dart';
 import '../../../../../core/helper/routes.dart';
@@ -17,37 +18,46 @@ class CustomBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final loc = context.loc;
     final bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return CurvedNavigationBar(
       index: currentIndex,
       backgroundColor: Colors.transparent,
-      color: isDarkMode ? AppColors.primary(context) : AppColors.primary(context), // مثال لتغيير اللون بناءً على الثيم
+      color: isDarkMode ? AppColors.primary(context) : AppColors.primary(context),
       buttonBackgroundColor: Colors.transparent,
       animationDuration: const Duration(milliseconds: 300),
       height: 60.h,
       onTap: (index) async {
         final token = CacheHelper.getSaveData(key: 'token');
 
-        if (index == 2 && token == null) {
+        if ((index == 0 || index == 2) && token == null) {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: TitleText(title: 'Alert',),
-              content: TitleText(title: 'To view your profile please login',),
+              backgroundColor: AppColors.backGround(context),
+              title: TitleText(title: loc.translate("alert")),
+              content: TitleText(title: loc.translate("to_show_this_page"),),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: TitleText(title: 'Cancel',),
+                  child: TitleText(title: loc.translate("cancel")),
                 ),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary(context),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
                   onPressed: () {
                     context.go(AppRoutes.login);
                   },
-                  child: TitleText(title: 'Login',),
+                  child: TitleText(title: loc.translate("login"),),
                 ),
               ],
             ),

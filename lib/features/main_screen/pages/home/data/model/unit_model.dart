@@ -7,16 +7,13 @@ class UnitModel {
   final int numOfBathrooms;
   final int unitArea;
   final String address;
-  final String imageUrl;
+  final List<String> imageUrl;
   final DateTime datePosted;
   final String resourceLink;
-  // final String name;
-  // final String location;
+  final String? developerPortfolio;
+  String? description;
 
-  UnitModel(
-    {
-      // required this.name,
-      // required this.location,
+  UnitModel({
     required this.id,
     required this.title,
     required this.type,
@@ -28,6 +25,8 @@ class UnitModel {
     required this.imageUrl,
     required this.datePosted,
     required this.resourceLink,
+    required this.developerPortfolio,
+    this.description,
   });
 
   factory UnitModel.fromJson(Map<String, dynamic> json) {
@@ -40,22 +39,28 @@ class UnitModel {
       parsedDate = DateTime(1970, 1, 1);
     }
 
+    // استخراج الصور كروابط كاملة
+    List<String> imageUrls = [];
+    if (json['images'] != null && json['images'] is List) {
+      imageUrls = List<String>.from(json['images'].map(
+            (imgPath) => "https://propertyapi.runasp.net$imgPath",
+      ));
+    }
+
     return UnitModel(
-      id: json['id'],
-      title: json['title'],
-      type: json['type'],
-      price: json['price'],
-      numOfRooms: json['numberOfBedrooms'],
-      numOfBathrooms: json['numberOfBathrooms'],
-      unitArea: json['unitArea'],
-      address: json['address'],
-      imageUrl: (json['images'] != null && json['images'].isNotEmpty)
-          ? "https://propertyapi.runasp.net${json['images'][0]}"
-          : "",
+      description : json['description'],
+      id: json['id'] ?? 0,
+      title: json['title'] ?? '',
+      type: json['type'] ?? '',
+      price: json['price'] ?? 0,
+      numOfRooms: json['numberOfBedrooms'] ?? 0,
+      numOfBathrooms: json['numberOfBathrooms'] ?? 0,
+      unitArea: json['unitArea'] ?? 0,
+      address: json['address'] ?? '',
+      imageUrl: imageUrls,
       datePosted: parsedDate,
       resourceLink: json['resourceLink'] ?? '',
-     // name:json["name"],
-     //  location:json["location"],
+      developerPortfolio: json['developerPortfolio'] is String ? json['developerPortfolio'] : null,
 
     );
   }

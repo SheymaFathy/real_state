@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,14 +17,15 @@ import 'package:real_state/features/main_screen/pages/home/data/repo/home_repo.d
 import 'package:real_state/features/main_screen/pages/home/pre/view_model/home_cubit.dart';
 import 'features/main_screen/pages/comments/data/repo/comments_repo.dart';
 import 'features/main_screen/pages/comments/pre/view_model/comments_cubit.dart';
-import 'features/main_screen/pages/search/search_repo.dart';
+import 'features/main_screen/pages/search/data/repo/search_repo.dart';
+import 'features/main_screen/pages/search/pre/view_model/search_cubit.dart';
 import 'features/onboarding/pre/view_model/onboarding_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await CacheHelper.init();
 
-   final Locale systemLocale = PlatformDispatcher.instance.locale;
+  final Locale systemLocale = PlatformDispatcher.instance.locale;
 
   runApp(MyApp(systemLocale: systemLocale));
 }
@@ -35,12 +38,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-
         BlocProvider<LanguageCubit>(create: (_) => LanguageCubit(systemLocale)),
         BlocProvider<ThemeCubit>(create: (_) => ThemeCubit()),
+        BlocProvider<SearchCubit>(create: (_) => SearchCubit(SearchRepository())),
         BlocProvider<UnitCubit>(create: (_) => UnitCubit(UnitRepository())),
         BlocProvider<OnboardingCubit>(create: (_) => OnboardingCubit()),
-        BlocProvider<CommentCubit>(create: (_) => CommentCubit(commentRepository: CommentRepository())),
+        BlocProvider<CommentCubit>(
+          create: (_) => CommentCubit(commentRepository: CommentRepository()),
+        ),
       ],
       child: BlocBuilder<ThemeCubit, ThemeState>(
         builder: (context, themeState) {

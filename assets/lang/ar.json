@@ -19,6 +19,7 @@
   "login": "تسجيل الدخول",
   "email": "البريد الإلكتروني",
   "password": "كلمة المرور" ,
+    "confirm_password": "تأكيد كلمة المرور",
   "hello_user": "مرحبًا بك في تطبيقنا",
   "show_More": "عرض المزيد",
   "onboarding_title_1": "جميع عقارات مصر في مكان واحد",
@@ -30,5 +31,18 @@
   "add_comment": "إضافة تعليق",
   "units_details": "تفاصيل الوحدات",
   "no_data": "لا توجد بيانات",
-  "comments": "التعليقات"
+  "comments": "التعليقات",
+  "alert": "تنبيه",
+    "to_show_this_page": "لعرض هذه الصفحة، تحتاج إلى تسجيل الدخول أولاً",
+  "cancel": "إلغاء",
+  "forgot_password": "نسيت كلمة المرور ؟",
+  "Welcome_back": "مرحبًا بعودتك",
+  "Don't have an account?": "ليس لديك حساب ؟",
+    "Create it now": "قم بإنشائه الآن",
+  "loading": "جار التحميل ...",
+  "register": "تسجيل",
+  "create_account": "إنشاء حساب",
+    "have_an_account_already": "هل لديك حساب بالفعل ؟ ",
+    "learn_more": "تعرف على المزيد"
+
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:real_state/core/helper/context_extensions.dart';
 import 'package:real_state/features/main_screen/pages/home/pre/view/widgets/top_bar_widget.dart';
 import '../../../../../../widgets/title_text.dart';
 import '../../../data/repo/home_repo.dart';
@@ -13,7 +14,7 @@ class AllAdsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    final loc = context.loc;
     return BlocProvider<UnitCubit>(
       create: (_) => UnitCubit(UnitRepository())..fetchHotDeals(),
       child: Scaffold(
@@ -28,7 +29,7 @@ class AllAdsPage extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: TitleText(title: "Hot Deal"),
+                  child: TitleText(title: loc.translate("Hot_deals")),
                 ),
               ],
             ),

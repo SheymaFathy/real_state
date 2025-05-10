@@ -1,7 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:real_state/features/auth/login/pre/view/login_screen.dart';
 import 'package:real_state/features/auth/profile/pre/view/profile_page.dart';
-import 'package:real_state/features/auth/register/pre/view/register.dart';
+import 'package:real_state/features/auth/register/pre/view/sign_up.dart';
 import 'package:real_state/features/main_screen/pages/home/pre/view/home_page.dart';
 import 'package:real_state/features/main_screen/pages/my_fav/pre/view/my_favorite.dart';
 import 'package:real_state/features/onboarding/pre/view/onboarding_view.dart';
@@ -47,7 +47,7 @@ abstract class AppRoutes {
 
       GoRoute(
         path: register,
-        builder: (context, state) => Register(),
+        builder: (context, state) => SignUp(),
       ),
 
       GoRoute(

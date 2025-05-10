@@ -32,10 +32,11 @@ class LoginCubit extends Cubit<LoginState> {
         final token = data['token'] ?? '';
         final username = data['username'] ?? '';
         final email = data['email'] ?? '';
-
+        final userId = data['id']?.toString() ?? '';
         await CacheHelper.saveData(key: 'token', value: token);
         await CacheHelper.saveData(key: 'username', value: username);
         await CacheHelper.saveData(key: 'email', value: email);
+        await CacheHelper.saveData(key: 'userId', value: userId);
 
         emit(LoginSuccess(response));
 

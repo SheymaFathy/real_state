@@ -1,6 +1,17 @@
-part of 'my_favorite_cubit.dart';
+abstract class FavoriteState {}
 
-@immutable
-sealed class MyFavoriteState {}
+class FavoriteInitial extends FavoriteState {}
 
-final class MyFavoriteInitial extends MyFavoriteState {}
+class FavoriteLoading extends FavoriteState {}
+
+class FavoriteSuccess extends FavoriteState {
+  final bool isFavorite;
+  FavoriteSuccess({required this.isFavorite});
+}
+
+class FavoriteError extends FavoriteState {
+  final String error;
+  FavoriteError({required this.error});
+}
+
+class FavoriteUnAuthenticated extends FavoriteState {}

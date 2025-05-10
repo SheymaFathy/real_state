@@ -3,15 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:real_state/core/constants/styles.dart';
 import 'package:real_state/core/helper/context_extensions.dart';
 import 'package:real_state/core/helper/routes.dart';
-import 'package:real_state/features/main_screen/pages/home/pre/view/widgets/comment_input_widget.dart';
-import 'package:real_state/features/main_screen/pages/home/pre/view/widgets/comments_widget.dart';
 import 'package:real_state/features/main_screen/pages/home/pre/view/widgets/details_card_widget.dart';
 import 'package:real_state/features/main_screen/pages/home/pre/view/widgets/top_bar_widget.dart';
-import '../../../../../../core/constants/colors.dart';
-import '../../../../../widgets/title_text.dart';
+
 import '../../data/repo/home_repo.dart';
 import '../view_model/home_cubit.dart';
 import '../view_model/home_state.dart';
@@ -32,10 +28,9 @@ class UnitDetailsPageState extends State<UnitDetailsPage> {
   @override
   Widget build(BuildContext context) {
     final loc = context.loc;
-
     return WillPopScope(
       onWillPop: () async {
-        context.go(AppRoutes.mainScreen);
+        context.push(AppRoutes.mainScreen);
         return false;
       },
       child: Scaffold(
@@ -44,25 +39,6 @@ class UnitDetailsPageState extends State<UnitDetailsPage> {
           child: Column(
             children: [
               const TopBarWidget(),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8.0,
-                  horizontal: 16,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TitleText(title: loc.translate("units_details")),
-                    IconButton(
-                      onPressed: () => context.go(AppRoutes.mainScreen),
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: AppColors.titleColor(context),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
               Expanded(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.only(bottom: 16),
@@ -91,9 +67,7 @@ class UnitDetailsPageState extends State<UnitDetailsPage> {
                               var unit = state.units.first;
 
                               return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0,
-                                ),
+                                padding: const EdgeInsets.all(8.0),
                                 child: AdsDetailsCard(unit: unit),
                               );
                             } else if (state is UnitError) {
@@ -107,42 +81,11 @@ class UnitDetailsPageState extends State<UnitDetailsPage> {
                           },
                         ),
                       ),
-                      const Divider(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(
-                          loc.translate("comments"),
-                          style: AppTextStyles.title(context),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: CommentsWidget(comments: comments),
-                      ),
                     ],
                   ),
                 ),
               ),
             ],
-          ),
-        ),
-        bottomNavigationBar: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: CommentInputWidget(
-              context,
-              controller: commentController,
-              onSend: () {
-                String comment = commentController.text.trim();
-                if (comment.isNotEmpty) {
-                  setState(() {
-                    comments.add(comment);
-                  });
-                  commentController.clear();
-                }
-              },
-            ),
           ),
         ),
       ),

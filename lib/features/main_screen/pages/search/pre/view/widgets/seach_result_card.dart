@@ -1,46 +1,49 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:real_state/core/helper/context_extensions.dart';
+import 'package:go_router/go_router.dart';
+import 'package:real_state/features/main_screen/pages/search/data/model/search_model.dart';
 import '../../../../../../../core/constants/colors.dart';
 import '../../../../../../../core/constants/styles.dart';
+import '../../../../../../../core/helper/routes.dart';
 import '../../../../../../widgets/elevated_button_def.dart';
-import '../../../../my_fav/pre/view_model/my_favorite_state.dart';
-import '../../../data/model/unit_model.dart';
-import '../../../data/repo/home_repo.dart';
+import '../../../../home/data/repo/home_repo.dart';
+
 import '../../../../my_fav/pre/view_model/my_favorite_cubit.dart';
-import '../unit_details.dart';
+import '../../../../my_fav/pre/view_model/my_favorite_state.dart';
 
-class AdsCard extends StatelessWidget {
-  final UnitModel unit;
+class SearchResultCard extends StatelessWidget {
+  final Data data;
 
-  const AdsCard({super.key, required this.unit});
+  const SearchResultCard({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => FavoriteCubit(UnitRepository()),
-      child: AdsCardContent(unit: unit),
+      child: SearchResultCardContent(data: data),
     );
   }
 }
 
-class AdsCardContent extends StatefulWidget {
-  final UnitModel unit;
-  const AdsCardContent({super.key, required this.unit});
+class SearchResultCardContent extends StatefulWidget {
+  final Data data;
+  const SearchResultCardContent({super.key, required this.data});
 
   @override
-  State<AdsCardContent> createState() => _AdsCardContentState();
+  State<SearchResultCardContent> createState() =>
+      _SearchResultCardContentState();
 }
 
-class _AdsCardContentState extends State<AdsCardContent> {
+class _SearchResultCardContentState extends State<SearchResultCardContent> {
+  bool isFavorite = false;
 
   @override
   Widget build(BuildContext context) {
-    final loc = context.loc;
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+
     return SizedBox(
       width: screenWidth * 0.8,
       child: Stack(
@@ -59,48 +62,51 @@ class _AdsCardContentState extends State<AdsCardContent> {
                     topLeft: Radius.circular(16),
                     topRight: Radius.circular(16),
                   ),
-                  child: widget.unit.imageUrl.isNotEmpty
-                      ? CarouselSlider(
-                    options: CarouselOptions(
-                      height: screenHeight * 0.18,
-                      viewportFraction: 1.0,
-                      enableInfiniteScroll: true,
-                      autoPlay: true,
-                    ),
-                    items: widget.unit.imageUrl.map((imageUrl) {
-                      return Image.network(
-                        imageUrl,
-                        height: screenHeight * 0.18,
-                        width: screenWidth,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
+                  child:
+                      widget.data.images!.isNotEmpty
+                          ? CarouselSlider(
+                            options: CarouselOptions(
+                              height: screenHeight * 0.18,
+                              viewportFraction: 1.0,
+                              enableInfiniteScroll: true,
+                              autoPlay: false,
+                            ),
+                            items:
+                                widget.data.images!.map((imageUrl) {
+                                  return Builder(
+                                    builder: (BuildContext context) {
+                                      return Image.network(
+                                        imageUrl,
+                                        width: screenWidth,
+                                        fit: BoxFit.cover,
+                                      );
+                                    },
+                                  );
+                                }).toList(),
+                          )
+                          : Container(
+                            height: screenHeight * 0.18,
+                            width: screenWidth * 0.8,
                             color: Colors.grey.shade300,
-                            child: const Icon(Icons.broken_image),
-                          );
-                        },
-                      );
-                    }).toList(),
-                  )
-                      : Container(
-                    height: screenHeight * 0.18,
-                    width: screenWidth * 0.8,
-                    color: Colors.grey.shade300,
-                    child: const Icon(Icons.image_not_supported),
-                  ),
+                            child: const Icon(Icons.image_not_supported),
+                          ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    widget.unit.type,
-                    style: AppTextStyles.title(context).copyWith(fontSize: 8.sp),
+                    widget.data.type ?? '',
+                    style: AppTextStyles.title(
+                      context,
+                    ).copyWith(fontSize: 8.sp),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text(
-                    "${widget.unit.price} EGP",
-                    style: AppTextStyles.title(context).copyWith(fontSize: 17.sp),
+                    "${widget.data.price} EGP",
+                    style: AppTextStyles.title(
+                      context,
+                    ).copyWith(fontSize: 17.sp),
                   ),
                 ),
                 Padding(
@@ -115,16 +121,21 @@ class _AdsCardContentState extends State<AdsCardContent> {
                       SizedBox(width: 4.w),
                       Expanded(
                         child: Text(
-                          widget.unit.address,
+                          widget.data.address ?? '',
                           overflow: TextOverflow.ellipsis,
-                          style: AppTextStyles.title(context).copyWith(fontSize: 8.sp),
+                          style: AppTextStyles.title(
+                            context,
+                          ).copyWith(fontSize: 8.sp),
                         ),
                       ),
                     ],
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8.0,
+                    vertical: 4,
+                  ),
                   child: Row(
                     children: [
                       Icon(
@@ -134,8 +145,10 @@ class _AdsCardContentState extends State<AdsCardContent> {
                       ),
                       SizedBox(width: 4.w),
                       Text(
-                        "${widget.unit.numOfRooms},",
-                        style: AppTextStyles.title(context).copyWith(fontSize: 12.sp),
+                        "${widget.data.numberOfBedrooms},",
+                        style: AppTextStyles.title(
+                          context,
+                        ).copyWith(fontSize: 12.sp),
                       ),
                       SizedBox(width: 15.w),
                       Icon(
@@ -145,8 +158,10 @@ class _AdsCardContentState extends State<AdsCardContent> {
                       ),
                       SizedBox(width: 4.w),
                       Text(
-                        "${widget.unit.numOfBathrooms}",
-                        style: AppTextStyles.title(context).copyWith(fontSize: 12.sp),
+                        "${widget.data.numberOfBathrooms}",
+                        style: AppTextStyles.title(
+                          context,
+                        ).copyWith(fontSize: 12.sp),
                       ),
                       SizedBox(width: 15.w),
                       Icon(
@@ -156,8 +171,10 @@ class _AdsCardContentState extends State<AdsCardContent> {
                       ),
                       SizedBox(width: 4.w),
                       Text(
-                        "${widget.unit.unitArea} m²",
-                        style: AppTextStyles.title(context).copyWith(fontSize: 12.sp),
+                        "${widget.data.unitArea} m²",
+                        style: AppTextStyles.title(
+                          context,
+                        ).copyWith(fontSize: 12.sp),
                       ),
                     ],
                   ),
@@ -166,9 +183,14 @@ class _AdsCardContentState extends State<AdsCardContent> {
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButtonDef(
                     press: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>UnitDetailsPage(unitId: widget.unit.id)));
+                      context.push(
+                        AppRoutes.unitDetails.replaceFirst(
+                          ':id',
+                          widget.data.id.toString(),
+                        ),
+                      );
                     },
-                    text: loc.translate("learn_more")
+                    text: 'Learn More',
                   ),
                 ),
               ],
@@ -182,7 +204,10 @@ class _AdsCardContentState extends State<AdsCardContent> {
               child: InkWell(
                 borderRadius: BorderRadius.circular(16),
                 onTap: () {
-                  context.read<FavoriteCubit>().toggleFavorite(widget.unit.id);
+                  // هنا تستخدم الـ Cubit لإضافة/إزالة من المفضلة
+                  context.read<FavoriteCubit>().toggleFavorite(
+                    widget.data.id ?? 0,
+                  );
                 },
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
@@ -195,7 +220,7 @@ class _AdsCardContentState extends State<AdsCardContent> {
                   ),
                   child: BlocBuilder<FavoriteCubit, FavoriteState>(
                     builder: (context, state) {
-                      bool isFavorite = false;
+                      // تحقق من الحالة لتحديث حالة المفضلة
                       if (state is FavoriteSuccess) {
                         isFavorite = state.isFavorite;
                       }
