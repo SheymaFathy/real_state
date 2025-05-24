@@ -1,44 +1,26 @@
-import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import '../../../../../core/helper/hosting.dart';
+import 'package:dartz/dartz.dart';
+import 'package:real_state/core/dio/dio_helper.dart';
+import 'package:real_state/core/helper/failures.dart';
+import 'package:real_state/features/auth/register/data/model/register_response.dart';
 
 class LoginRepository {
-  Future<Map<String, dynamic>?> login({
+  Future<Either<Failures, RegisterResponse>> loginUser({
     required String email,
     required String password,
   }) async {
     try {
-      var uri = Hostting.login;
-
-      var headers = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      };
-      var response = await http.post(
-        uri,
-        headers: headers,
-        body: json.encode({'email': email, 'password': password}),
+      final response = await DioHelper.postData(
+        url: "Auth/login",
+        data: {'email': email, 'password': password},
       );
-
-      if (response.statusCode == 200) {
-        if (kDebugMode) {
-          print("Login Success: ${response.body}");
-        }
-        final decoded = json.decode(response.body);
-        return decoded;
+      final user = RegisterResponse.fromJson(response.data);
+      if (user.status == true) {
+        return Right(user);
       } else {
-        if (kDebugMode) {
-          print("Login Failed: ${response.statusCode}");
-          print("Response Body: ${response.body}");
-        }
-        return null;
+        return left(ServerFailure(user.message.toString()));
       }
     } catch (e) {
-      if (kDebugMode) {
-        print("Error occurred during login: $e");
-      }
-      return null;
+      return left(ServerFailure(e.toString()));
     }
   }
 }

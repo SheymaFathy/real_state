@@ -12,6 +12,7 @@ class RegisterUserModel {
   String? password;
   File? photo;
 
+
   RegisterUserModel({
     this.username,
     this.firstName,

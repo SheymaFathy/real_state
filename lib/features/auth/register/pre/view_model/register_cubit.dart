@@ -20,12 +20,12 @@ class RegisterCubit extends Cubit<RegisterState> {
 
   RegisterCubit(this._registerRepository) : super(RegisterInitial());
 
-  Future<void> register(RegisterUserModel user) async {
+  Future<void> register(RegisterUserModel request) async {
     try {
       emit(RegisterLoading());
 
-      final response = await _registerRepository.register(user);
-      emit(RegisterSuccess(response['message'] ?? "Registration successful"));
+      final user = await _registerRepository.register(request);
+      emit(RegisterSuccess(user.message ?? "Registration successful"));
     } catch (e) {
       emit(RegisterFailure(e.toString().replaceFirst('Exception: ', '')));
     }

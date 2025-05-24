@@ -8,8 +8,7 @@ import '../../../../../../../core/constants/colors.dart';
 import '../../../../../../../core/constants/styles.dart';
 import '../../../../../../../core/helper/routes.dart';
 import '../../../../../../widgets/elevated_button_def.dart';
-import '../../../../home/data/repo/home_repo.dart';
-
+import '../../../../my_fav/data/repo/favorite_repo.dart';
 import '../../../../my_fav/pre/view_model/my_favorite_cubit.dart';
 import '../../../../my_fav/pre/view_model/my_favorite_state.dart';
 
@@ -21,7 +20,7 @@ class SearchResultCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => FavoriteCubit(UnitRepository()),
+      create: (_) => FavoriteCubit(FavoriteRepository()),
       child: SearchResultCardContent(data: data),
     );
   }
@@ -204,10 +203,7 @@ class _SearchResultCardContentState extends State<SearchResultCardContent> {
               child: InkWell(
                 borderRadius: BorderRadius.circular(16),
                 onTap: () {
-                  // هنا تستخدم الـ Cubit لإضافة/إزالة من المفضلة
-                  context.read<FavoriteCubit>().toggleFavorite(
-                    widget.data.id ?? 0,
-                  );
+                  context.read<FavoriteCubit>().addToFavorite(widget.data.id.toString());
                 },
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
@@ -218,13 +214,15 @@ class _SearchResultCardContentState extends State<SearchResultCardContent> {
                       BoxShadow(color: AppColors.black(context), blurRadius: 4),
                     ],
                   ),
-                  child: BlocBuilder<FavoriteCubit, FavoriteState>(
-                    builder: (context, state) {
-                      // تحقق من الحالة لتحديث حالة المفضلة
+                  child: BlocConsumer<FavoriteCubit, FavoriteState>(
+                    listener: (context, state) {
                       if (state is FavoriteSuccess) {
-                        isFavorite = state.isFavorite;
+                        setState(() {
+                          isFavorite = !isFavorite;
+                        });
                       }
-
+                    },
+                    builder: (context, state) {
                       return Icon(
                         isFavorite ? Icons.favorite : Icons.favorite_border,
                         color: Colors.red,
@@ -236,6 +234,7 @@ class _SearchResultCardContentState extends State<SearchResultCardContent> {
               ),
             ),
           ),
+
         ],
       ),
     );

@@ -1,35 +1,55 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../../core/shared_preferences/cach_helper.dart';
-import '../../../home/data/repo/home_repo.dart';
+import 'package:real_state/core/shared_preferences/cach_helper.dart';
+import 'package:real_state/features/main_screen/pages/my_fav/data/models/fav_model.dart';
+import '../../data/repo/favorite_repo.dart';
 import 'my_favorite_state.dart';
 
 class FavoriteCubit extends Cubit<FavoriteState> {
-  final UnitRepository unitRepository;
+  final FavoriteRepository repository;
 
-  FavoriteCubit(this.unitRepository) : super(FavoriteInitial());
+  FavoriteCubit(this.repository) : super(FavoriteInitial());
 
-  void toggleFavorite(int unitId) async {
-    emit(FavoriteLoading());
+  Future<void> addToFavorite(String unitId) async {
+    emit(FavoriteSuccess(unitId));
 
     try {
-      final userId = CacheHelper.getSaveData(key: 'id')?.toString() ?? '';
-      print('Read userId: $userId (${userId.runtimeType})');
-
-      if (userId.isEmpty) {
-        emit(FavoriteUnAuthenticated());
-        return;
-      }
-
-
-      final body = {'unitId': unitId, 'userId': userId};
-
-      final isFav = await unitRepository.toggleFavorite(unitId, userId, body);
-      print('Is Favorite Response: $isFav');
-      emit(FavoriteSuccess(isFavorite: isFav));
+      await repository.addToFavorite(unitId);
+      emit(FavoriteSuccess("تمت الإضافة إلى المفضلة بنجاح"));
+      print("Favorite addedddddddddddddddd $FavoriteSuccess");
     } catch (e) {
-      emit(FavoriteError(error: e.toString()));
+      emit(FavoriteError(e.toString().replaceAll("Exception:", "").trim()));
+    }
+  }
+
+  FavoriteModel? favoriteModel;
+  Future<void> getFavorite() async {
+    print("token ${CacheHelper.getSaveData(key: "token")}");
+    emit(FavoriteLoading());
+    try {
+      final result = await repository.getFavorites();
+      result.fold((failure) => emit(GetFavoriteError(failure.errMessage)), (
+        favorites,
+      ) {
+        favoriteModel = favorites;
+        emit(GetFavoriteSuccess(favorites));
+      });
+    } catch (e) {
+      emit(FavoriteError(e.toString()));
+    }
+  }
+
+  Future<void> deleteFavorite(int unitId) async {
+    emit(DeleteFavoriteLoading());
+    try {
+      final result = await repository.deleteFavorite(unitId);
+      result.fold(
+        (failure) => emit(DeleteFavoriteError(failure.errMessage)),
+        (message) => emit(DeleteFavoriteSuccess(message)),
+      );
+    } catch (e) {
+      emit(FavoriteError(e.toString()));
     }
   }
 }

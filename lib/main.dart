@@ -15,6 +15,9 @@ import 'package:real_state/core/theme/theme_cubit.dart';
 import 'package:real_state/core/theme/theme_status.dart';
 import 'package:real_state/features/main_screen/pages/home/data/repo/home_repo.dart';
 import 'package:real_state/features/main_screen/pages/home/pre/view_model/home_cubit.dart';
+import 'package:real_state/features/main_screen/pages/my_fav/data/repo/favorite_repo.dart';
+import 'package:real_state/features/main_screen/pages/my_fav/pre/view_model/my_favorite_cubit.dart';
+import 'core/dio/dio_helper.dart';
 import 'features/main_screen/pages/comments/data/repo/comments_repo.dart';
 import 'features/main_screen/pages/comments/pre/view_model/comments_cubit.dart';
 import 'features/main_screen/pages/search/data/repo/search_repo.dart';
@@ -24,7 +27,7 @@ import 'features/onboarding/pre/view_model/onboarding_cubit.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await CacheHelper.init();
-
+  DioHelper.init();
   final Locale systemLocale = PlatformDispatcher.instance.locale;
 
   runApp(MyApp(systemLocale: systemLocale));
@@ -43,6 +46,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<SearchCubit>(create: (_) => SearchCubit(SearchRepository())),
         BlocProvider<UnitCubit>(create: (_) => UnitCubit(UnitRepository())),
         BlocProvider<OnboardingCubit>(create: (_) => OnboardingCubit()),
+        BlocProvider<FavoriteCubit>(create: (_) => FavoriteCubit(FavoriteRepository())),
         BlocProvider<CommentCubit>(
           create: (_) => CommentCubit(commentRepository: CommentRepository()),
         ),

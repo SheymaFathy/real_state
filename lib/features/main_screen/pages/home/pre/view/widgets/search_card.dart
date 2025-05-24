@@ -7,12 +7,15 @@ import 'package:real_state/features/main_screen/pages/search/pre/view/search_res
 import 'package:real_state/features/main_screen/pages/search/pre/view_model/search_cubit.dart';
 import '../../../../../../../core/constants/colors.dart';
 import '../../../../../../widgets/elevated_button_def.dart';
+import '../../../../search/data/model/search_model.dart';
 import '../../../../search/data/model/search_set_model.dart';
 import '../../../../search/pre/view/widgets/filter_btm_sheet.dart';
+import '../../../../search/pre/view/widgets/sort_btm_sheet.dart';
 import '../../../data/model/unit_model.dart';
 
 class SearchCard extends StatefulWidget {
-  const SearchCard({super.key});
+  const SearchCard({super.key, this.list});
+  final List<Data>? list;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -23,6 +26,7 @@ class _SearchCardState extends State<SearchCard> {
   String selectedFilter = "Select Filter";
   String selectCustomTextFieldSort = "Select Sort";
   TextEditingController locationController = TextEditingController();
+
   List<UnitModel> searchResults = [];
 
   Future<void> searchUnits() async {
@@ -121,10 +125,14 @@ class _SearchCardState extends State<SearchCard> {
                 ),
                 child: ElevatedButton(
                   onPressed: () {
-                    // showModalBottomSheet(
-                    //   context: context,
-                    //   builder: (_) => SortBottomSheet(),
-                    // );
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder:
+                          (_) => SortBottomSheet(
+                        searchCubit: context.read<SearchCubit>(),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,

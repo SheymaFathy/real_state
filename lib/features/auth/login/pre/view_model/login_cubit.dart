@@ -1,9 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:go_router/go_router.dart';
-import 'package:flutter/foundation.dart';
 import 'package:real_state/features/auth/login/data/repo/login_repo.dart';
-import '../../../../../core/helper/routes.dart';
 import '../../../../../core/shared_preferences/cach_helper.dart';
 import 'login_state.dart';
 
@@ -17,40 +14,21 @@ class LoginCubit extends Cubit<LoginState> {
 
   Future<void> loginUser(BuildContext context) async {
     emit(LoginLoading());
+    final response = await loginRepository.loginUser(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    );
 
-    try {
-      final response = await loginRepository.login(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-
-      if (response != null &&
-          response.containsKey("data") &&
-          response['data'].isNotEmpty) {
-        final data = response['data'][0];
-
-        final token = data['token'] ?? '';
-        final username = data['username'] ?? '';
-        final email = data['email'] ?? '';
-        final userId = data['id']?.toString() ?? '';
-        await CacheHelper.saveData(key: 'token', value: token);
-        await CacheHelper.saveData(key: 'username', value: username);
-        await CacheHelper.saveData(key: 'email', value: email);
-        await CacheHelper.saveData(key: 'userId', value: userId);
-
-        emit(LoginSuccess(response));
-
-        if (context.mounted) {
-          context.go(AppRoutes.mainScreen);
-        }
-      } else {
+    response.fold(
+      (l) {
         emit(LoginFailure("Login failed. Please check your credentials."));
-      }
-    } catch (e) {
-      emit(LoginFailure("Something went wrong: $e"));
-      if (kDebugMode) {
-        print("Login error: $e");
-      }
-    }
+      },
+      (r) async {
+        emit(LoginSuccess(r));
+        await CacheHelper.saveData(key: 'token', value: r.data?[0].token);
+        await CacheHelper.saveData(key: 'username', value: r.data?[0].username);
+        await CacheHelper.saveData(key: 'email', value: r.data?[0].email);
+      },
+    );
   }
 }
