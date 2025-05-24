@@ -43,7 +43,18 @@
     "register":"Register",
     "create_account":"Create an account",
   "have_an_account_already":"Have an account already ? ",
-  "learn_more":"Learn More"
-
+  "learn_more":"Learn More",
+  "filter":"Filter",
+    "sort":"Sort",
+    "Dokki_Giza": "Dokki, Giza",
+    "Location": "Location",
+    "fliterd_result": "Results Filter",
+  "min_price": "Minimum Price",
+    "max_price": "Maximum Price",
+  "number_of_rooms": "Number of Rooms",
+  "number_of_bathrooms": "Number of Bathrooms",
+    "description": "Description",
+  "portfolio": "Developer Portfolio",
+    "url": "URL"
 
 }

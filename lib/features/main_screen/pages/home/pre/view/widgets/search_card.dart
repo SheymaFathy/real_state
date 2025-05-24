@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:real_state/core/constants/styles.dart';
+import 'package:real_state/core/helper/context_extensions.dart';
 import 'package:real_state/features/main_screen/pages/search/pre/view/search_result.dart';
 import 'package:real_state/features/main_screen/pages/search/pre/view_model/search_cubit.dart';
 import '../../../../../../../core/constants/colors.dart';
@@ -39,6 +40,7 @@ class _SearchCardState extends State<SearchCard> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = context.loc;
     return Container(
       width: 344.w,
       height: 260.h,
@@ -64,19 +66,20 @@ class _SearchCardState extends State<SearchCard> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 15, top: 5),
-                child: Text("Location", style: AppTextStyles.body(context)),
+                child: Text(loc.translate("Location"), style: AppTextStyles.body(context)),
               ),
             ],
           ),
           SizedBox(height: 5.h),
           TextField(
+            style: TextStyle(color: AppColors.titleColor(context)),
             controller: locationController,
             decoration: InputDecoration(
               contentPadding: EdgeInsets.symmetric(
                 horizontal: 15.w,
                 vertical: 10.h,
               ),
-              hintText: "Dokki, Giza",
+              hintText: loc.translate("Dokki_Giza"),
               fillColor: AppColors.textFieldColor(context),
               filled: true,
               hintStyle: AppTextStyles.body(
@@ -130,7 +133,8 @@ class _SearchCardState extends State<SearchCard> {
                       isScrollControlled: true,
                       builder:
                           (_) => SortBottomSheet(
-                        searchCubit: context.read<SearchCubit>(),
+                        searchCubit: context.read<SearchCubit>(), searchSetModel: SearchSetModel(
+                        ),
                       ),
                     );
                   },
@@ -152,7 +156,7 @@ class _SearchCardState extends State<SearchCard> {
                       Icon(Icons.swap_vert, color: AppColors.primary(context)),
                       const SizedBox(width: 8),
                       Text(
-                        "Sort",
+                        loc.translate("sort"),
                         style: AppTextStyles.body(context).copyWith(
                           color: AppColors.titleColor(context),
                           fontSize: 12.sp,
@@ -222,7 +226,7 @@ class _SearchCardState extends State<SearchCard> {
                       Icon(Icons.sort, color: AppColors.primary(context)),
                       const SizedBox(width: 8),
                       Text(
-                        "Filter",
+                        loc.translate("filter"),
                         style: AppTextStyles.body(context).copyWith(
                           color: AppColors.titleColor(context),
                           fontSize: 12.sp,
@@ -260,7 +264,7 @@ class _SearchCardState extends State<SearchCard> {
                 ),
               );
             },
-            text: 'Search',
+            text: loc.translate("search"),
           ),
 
           if (searchResults.isNotEmpty)

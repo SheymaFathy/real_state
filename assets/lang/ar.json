@@ -43,6 +43,18 @@
   "register": "تسجيل",
   "create_account": "إنشاء حساب",
     "have_an_account_already": "هل لديك حساب بالفعل ؟ ",
-    "learn_more": "تعرف على المزيد"
+    "learn_more": "تعرف على المزيد",
+    "filter": "تصفية",
+  "sort": "ترتيب",
+  "Dokki_Giza": "الدقي، الجيزة",
+  "Location": "الموقع",
+  "fliterd_result": "تصفية النتائج",
+  "min_price": "اقل سعر",
+    "max_price": "أعلى سعر",
+  "number_of_rooms": "عدد الغرف",
+  "number_of_bathrooms": "عدد الحمامات",
+  "description": "الوصف",
+  "portfolio": "معلومات المطور",
+  "url": "الرابط"
 
 }

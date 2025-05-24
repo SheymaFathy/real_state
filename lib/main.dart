@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<SearchCubit>(create: (_) => SearchCubit(SearchRepository())),
         BlocProvider<UnitCubit>(create: (_) => UnitCubit(UnitRepository())),
         BlocProvider<OnboardingCubit>(create: (_) => OnboardingCubit()),
-        BlocProvider<FavoriteCubit>(create: (_) => FavoriteCubit(FavoriteRepository())),
+        BlocProvider<FavoriteCubit>(create: (_) => FavoriteCubit(FavoriteRepository())..getFavorite(),),
         BlocProvider<CommentCubit>(
           create: (_) => CommentCubit(commentRepository: CommentRepository()),
         ),

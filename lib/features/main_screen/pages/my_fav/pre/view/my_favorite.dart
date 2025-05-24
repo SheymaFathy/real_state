@@ -55,7 +55,7 @@ class _MyFavoriteState extends State<MyFavorite> {
                     color: Colors.grey,
                     child: Column(
                       children: [
-                        Text(favList[index].unitTitle ?? ""),
+                        Text(favList[index].title ?? ""),
                         Divider(),
                         IconButton(
                           onPressed: () {

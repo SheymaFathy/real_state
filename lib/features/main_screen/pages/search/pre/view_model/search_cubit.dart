@@ -20,15 +20,17 @@ class SearchCubit extends Cubit<SearchState> {
       emit(SearchError("Error fetching data"));
     }
   }
-  void sortData(bool isBig) {
-    if (searchModel != null) {
+  void sortData({required bool isAscending}) {
+    if (searchModel != null && searchModel!.data != null) {
       searchModel!.data!.sort((a, b) {
-        if (isBig == false) {
-          return b.price!.compareTo(a.price!);
-        } else {
-          return a.price!.compareTo(b.price!);
-        }
+        final priceA = a.price ?? 0;
+        final priceB = b.price ?? 0;
+
+        return isAscending
+            ? priceA.compareTo(priceB)
+            : priceB.compareTo(priceA);
       });
+
       emit(SearchSuccess(searchModel!));
     }
   }

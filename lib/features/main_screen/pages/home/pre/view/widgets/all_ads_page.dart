@@ -20,10 +20,7 @@ class AllAdsPage extends StatelessWidget {
       child: Scaffold(
         body: Column(
           children: [
-            SafeArea(
-              child: const TopBarWidget(),
-
-            ),
+            SafeArea(child: const TopBarWidget()),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -47,7 +44,10 @@ class AllAdsPage extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => UnitDetailsPage(unitId: state.units[index].id),
+                                builder:
+                                    (context) => UnitDetailsPage(
+                                      unitId: state.units[index].id,
+                                    ),
                               ),
                             );
                           },

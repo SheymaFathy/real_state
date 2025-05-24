@@ -3,6 +3,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:real_state/core/helper/context_extensions.dart';
 import 'package:real_state/features/main_screen/pages/home/pre/view/widgets/web_page_view.dart';
 
 import '../../../../../../../core/constants/colors.dart';
@@ -20,6 +21,7 @@ class AdsDetailsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    final loc = context.loc;
 
     return SingleChildScrollView(
       child: Card(
@@ -153,7 +155,7 @@ class AdsDetailsCard extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: TitleText(title: "Description"),
+              child: TitleText(title: loc.translate("description")),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -186,11 +188,10 @@ class AdsDetailsCard extends StatelessWidget {
                       ),
                     );
                   },
-                  text: 'Developer Portfolio',
+                  text: loc.translate("portfolio"),
                 ),
               ),
 
-            // زر رابط URL
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButtonDef(
@@ -209,7 +210,7 @@ class AdsDetailsCard extends StatelessWidget {
                     );
                   }
                 },
-                text: 'URL',
+                text: loc.translate("url"),
               ),
             ),
           ],

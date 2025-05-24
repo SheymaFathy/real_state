@@ -29,16 +29,23 @@ class FavoriteCubit extends Cubit<FavoriteState> {
     emit(FavoriteLoading());
     try {
       final result = await repository.getFavorites();
-      result.fold((failure) => emit(GetFavoriteError(failure.errMessage)), (
-        favorites,
-      ) {
-        favoriteModel = favorites;
-        emit(GetFavoriteSuccess(favorites));
-      });
+      result.fold(
+            (failure) => emit(GetFavoriteError(failure.errMessage)),
+            (favorites) {
+          favoriteModel = favorites;
+
+          /// هنا نطبع قائمة المعرفات
+          final favoriteIds = favorites.data?.map((e) => e.unitId).toList();
+          print("favorite ids: $favoriteIds");
+
+          emit(GetFavoriteSuccess(favorites));
+        },
+      );
     } catch (e) {
       emit(FavoriteError(e.toString()));
     }
   }
+
 
   Future<void> deleteFavorite(int unitId) async {
     emit(DeleteFavoriteLoading());

@@ -12,6 +12,7 @@ class UnitModel {
   final String resourceLink;
   final String? developerPortfolio;
   String? description;
+  bool isFavorite = false;
 
   UnitModel({
     required this.id,
@@ -27,6 +28,7 @@ class UnitModel {
     required this.resourceLink,
     required this.developerPortfolio,
     this.description,
+    this.isFavorite = false,
   });
 
   factory UnitModel.fromJson(Map<String, dynamic> json) {
@@ -39,7 +41,6 @@ class UnitModel {
       parsedDate = DateTime(1970, 1, 1);
     }
 
-    // استخراج الصور كروابط كاملة
     List<String> imageUrls = [];
     if (json['images'] != null && json['images'] is List) {
       imageUrls = List<String>.from(json['images'].map(
@@ -48,6 +49,7 @@ class UnitModel {
     }
 
     return UnitModel(
+      isFavorite: json['isFavorite'] ?? false,
       description : json['description'],
       id: json['id'] ?? 0,
       title: json['title'] ?? '',

@@ -6,6 +6,7 @@ import 'package:real_state/core/helper/context_extensions.dart';
 import 'package:real_state/features/main_screen/pages/my_fav/data/repo/favorite_repo.dart';
 import '../../../../../../../core/constants/colors.dart';
 import '../../../../../../../core/constants/styles.dart';
+import '../../../../../../../core/shared_preferences/cach_helper.dart';
 import '../../../../../../widgets/elevated_button_def.dart';
 import '../../../../my_fav/pre/view_model/my_favorite_state.dart';
 import '../../../data/model/unit_model.dart';
@@ -35,14 +36,6 @@ class AdsCardContent extends StatefulWidget {
 }
 
 class _AdsCardContentState extends State<AdsCardContent> {
-  late bool isFavorite;
-
-  @override
-  void initState() {
-    super.initState();
-    isFavorite = false;
-  }
-
   @override
   Widget build(BuildContext context) {
     final loc = context.loc;
@@ -119,7 +112,7 @@ class _AdsCardContentState extends State<AdsCardContent> {
                       SizedBox(width: 4.w),
                       Expanded(
                         child: Text(
-                          widget.unit.address ,
+                          widget.unit.address,
                           overflow: TextOverflow.ellipsis,
                           style: AppTextStyles.title(context).copyWith(fontSize: 8.sp),
                         ),
@@ -178,7 +171,7 @@ class _AdsCardContentState extends State<AdsCardContent> {
               listener: (context, state) {
                 if (state is FavoriteSuccess) {
                   setState(() {
-                    isFavorite = !isFavorite;
+                    widget.unit.isFavorite = !widget.unit.isFavorite;
                   });
                 }
               },
@@ -188,8 +181,19 @@ class _AdsCardContentState extends State<AdsCardContent> {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(16),
                     onTap: () {
-                      context.read<FavoriteCubit>()
-                          .addToFavorite(widget.unit.id.toString());
+                      // ✅ تحقق من وجود التوكن أولًا
+                      final token = CacheHelper.getSaveData(key: "token");
+
+                      if (token != null && token.isNotEmpty) {
+                        context.read<FavoriteCubit>().addToFavorite(widget.unit.id.toString());
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("يرجى تسجيل الدخول أولاً لإضافة العقار إلى المفضلة"),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
                     },
                     child: Container(
                       padding: const EdgeInsets.all(8.0),
@@ -201,8 +205,8 @@ class _AdsCardContentState extends State<AdsCardContent> {
                         ],
                       ),
                       child: Icon(
-                        isFavorite ? Icons.favorite : Icons.favorite_border,
-                        color: Colors.red,
+                        widget.unit.isFavorite ? Icons.favorite : Icons.favorite_border,
+                        color: widget.unit.isFavorite ? Colors.red : Colors.grey,
                         size: 24,
                       ),
                     ),
@@ -211,6 +215,7 @@ class _AdsCardContentState extends State<AdsCardContent> {
               },
             ),
           ),
+
         ],
       ),
     );
