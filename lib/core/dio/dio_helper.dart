@@ -30,10 +30,10 @@ class DioHelper {
 
   static Future<Response> postData({
     required String url,
-    Map<String, dynamic>? qurey,
+    Map<String, dynamic>? query,
     data,
   }) async {
-    return dio!.post(url, queryParameters: qurey, data: data);
+        return dio!.post(url, queryParameters: query, data: data);
   }
 
   static Future<Response> deleteData({

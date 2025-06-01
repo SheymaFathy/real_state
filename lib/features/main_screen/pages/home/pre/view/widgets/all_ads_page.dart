@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:real_state/core/helper/context_extensions.dart';
+import 'package:real_state/features/main_screen/pages/home/pre/view/widgets/global_card.dart';
 import 'package:real_state/features/main_screen/pages/home/pre/view/widgets/top_bar_widget.dart';
 import '../../../../../../widgets/title_text.dart';
 import '../../../data/repo/home_repo.dart';
 import '../../view_model/home_cubit.dart';
 import '../../view_model/home_state.dart';
 import '../unit_details.dart';
-import 'ads_card.dart';
 
 class AllAdsPage extends StatelessWidget {
   const AllAdsPage({super.key});
@@ -53,7 +53,26 @@ class AllAdsPage extends StatelessWidget {
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: AdsCard(unit: state.units[index]),
+                            child: GlobalCard(
+                                imageUrl: state.units[index].imageUrl,
+                                unitType: state.units[index].type.toString(),
+                                price: state.units[index].price,
+                                address: state.units[index].address.toString(),
+                                numOfRooms: state.units[index].numOfRooms,
+                                numOfBathrooms: state.units[index].numOfBathrooms,
+                                unitArea: state.units[index].unitArea.toString(),
+                                press: (){
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => UnitDetailsPage(unitId: state.units[index].id),
+                                    ),
+                                  );
+                                },
+                                unitId: state.units[index].id,
+                                unit: state.units[index],
+                            )
+
                           ),
                         );
                       },

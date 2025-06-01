@@ -9,9 +9,10 @@ import '../../data/model/search_set_model.dart';
 import '../view_model/search_cubit.dart';
 
 class SearchResult extends StatefulWidget {
-  const SearchResult({super.key, required this.searchSetModel});
+  const SearchResult({super.key, required this.searchSetModel,});
 
   final SearchSetModel searchSetModel;
+
 
   @override
   State<SearchResult> createState() => _SearchResultState();
@@ -21,7 +22,9 @@ class _SearchResultState extends State<SearchResult> {
   @override
   void initState() {
     super.initState();
-
+    Future.microtask(() {
+      context.read<SearchCubit>().getData(widget.searchSetModel);
+    });
   }
 
   @override
@@ -54,7 +57,9 @@ class _SearchResultState extends State<SearchResult> {
                                 vertical: 8.0,
                                 horizontal: 16,
                               ),
-                              child: SearchResultCard(data: list[index]),
+                              child:
+                              SearchResultCard(data: list[index],),
+
                             );
                           },
                         ),

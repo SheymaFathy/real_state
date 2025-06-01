@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:real_state/core/helper/context_extensions.dart';
 import 'package:real_state/features/main_screen/pages/search/data/model/search_model.dart';
 import 'package:real_state/features/main_screen/pages/search/pre/view/widgets/sort_btm_sheet.dart';
 import 'package:real_state/features/main_screen/pages/search/pre/view_model/search_cubit.dart';
@@ -17,6 +18,7 @@ class SearchTopRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = context.loc;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
       child: Container(
@@ -37,14 +39,16 @@ class SearchTopRow extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: TextField(
+                  style: AppTextStyles.body(context),
                   controller: locationController,
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                    hintText: "New Location",
+                    hintText: loc.translate("new_location"),
                     border: InputBorder.none,
                     hintStyle: AppTextStyles.body(
                       context,
                     ).copyWith(color: AppColors.textHintColor(context)),
+
                   ),
                   onSubmitted: (value) {
                     final SearchSetModel searchSetModel = SearchSetModel(

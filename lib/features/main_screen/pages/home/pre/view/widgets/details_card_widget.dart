@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:real_state/core/helper/context_extensions.dart';
 import 'package:real_state/features/main_screen/pages/home/pre/view/widgets/web_page_view.dart';
-
 import '../../../../../../../core/constants/colors.dart';
 import '../../../../../../../core/constants/styles.dart';
 import '../../../../../../widgets/elevated_button_def.dart';

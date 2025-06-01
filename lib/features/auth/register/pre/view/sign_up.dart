@@ -42,6 +42,7 @@ class SignUp extends StatelessWidget {
               );
             });
           } else if (state is RegisterFailure) {
+            print("error in Register Failure: ${state.error}");
             WidgetsBinding.instance.addPostFrameCallback((_) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.error), backgroundColor: Colors.red),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:real_state/core/helper/context_extensions.dart';
 
 import '../../../../../../../core/constants/colors.dart';
 import '../../../../../../widgets/elevated_button_def.dart';
@@ -26,6 +27,7 @@ class SortBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
+    final loc = context.loc;
     return Container(
       height: mediaQuery.size.height * 0.35,
       decoration: BoxDecoration(
@@ -56,7 +58,7 @@ class SortBottomSheet extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const TitleText(title: "ترتيب حسب السعر"),
+                       TitleText(title: loc.translate("sort_by_price")),
                       const SizedBox(height: 16),
 
                       ElevatedButtonDef(
@@ -76,7 +78,7 @@ class SortBottomSheet extends StatelessWidget {
                             );
                           });
                         },
-                        text: "من الأعلى للأقل",
+                        text: loc.translate("max_to_min_price"),
                       ) ,
 
                       const SizedBox(height: 8),
@@ -97,7 +99,7 @@ class SortBottomSheet extends StatelessWidget {
                             );
                           });
                         },
-                        text: " من الأقل للأعلى",
+                        text: loc.translate("min_to_max_price"),
                       ),
 
                       const SizedBox(height: 16),

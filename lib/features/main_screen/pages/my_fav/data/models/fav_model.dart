@@ -15,17 +15,7 @@ class FavoriteModel {
     if (json['data'] != null) {
       data = <FavoriteModelData>[];
       json['data'].forEach((v) {
-        data!.add(FavoriteModelData.fromJson(
-            v,
-            v['unitId'] ?? 0,
-            v['unitTitle'] ?? '',
-            v['unitType'] ?? '',
-            v['price'] ?? 0,
-            v['numberOfBedrooms'] ?? 0,
-            v['numberOfBathrooms'] ?? 0,
-            v['address'] ?? '',
-            List<String>.from(v['images'] ?? []),
-        ));
+        data!.add(FavoriteModelData.fromJson(v));
       });
     }
   }
@@ -43,8 +33,8 @@ class FavoriteModel {
 }
 
 class FavoriteModelData {
-  late final int unitId;
-  late final String title;
+  final int unitId;
+  final String title;
   final String unitType;
   final int price;
   final int numberOfBedrooms;
@@ -52,18 +42,49 @@ class FavoriteModelData {
   final String address;
   final List<String> images;
 
+  FavoriteModelData({
+    required this.unitId,
+    required this.title,
+    required this.unitType,
+    required this.price,
+    required this.numberOfBedrooms,
+    required this.numberOfBathrooms,
+    required this.address,
+    required this.images,
+  });
 
-  FavoriteModelData(this.unitType, this.price, this.numberOfBedrooms, this.numberOfBathrooms, this.address, this.images, {required this.unitId, required this.title});
+  factory FavoriteModelData.fromJson(Map<String, dynamic> json) {
+    const String baseUrl = "https://propertyapi.runasp.net";
 
-  FavoriteModelData.fromJson(Map<String, dynamic> json, this.unitId, this.title, this.unitType, this.price, this.numberOfBedrooms, this.numberOfBathrooms, this.address, this.images) {
-    unitId = json['unitId'];
-    title = json['title'];
+    List<String> imagePaths = [];
+    if (json['images'] != null && json['images'] is List) {
+      imagePaths = List<String>.from(json['images'].map(
+            (imgPath) => "$baseUrl$imgPath",
+      ));
+    }
+
+    return FavoriteModelData(
+      unitId: json['unitId'] ?? 0,
+      title: json['unitTitle'] ?? '',
+      unitType: json['unitType'] ?? '',
+      price: json['price'] ?? 0,
+      numberOfBedrooms: json['numberOfBedrooms'] ?? 0,
+      numberOfBathrooms: json['numberOfBathrooms'] ?? 0,
+      address: json['address'] ?? '',
+      images: imagePaths,
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['unitId'] = unitId;
-    data['unitTitle'] = title;
-    return data;
+    return {
+      'unitId': unitId,
+      'unitTitle': title,
+      'unitType': unitType,
+      'price': price,
+      'numberOfBedrooms': numberOfBedrooms,
+      'numberOfBathrooms': numberOfBathrooms,
+      'address': address,
+      'images': images,
+    };
   }
 }

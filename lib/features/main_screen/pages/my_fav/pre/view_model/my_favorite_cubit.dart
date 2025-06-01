@@ -34,7 +34,6 @@ class FavoriteCubit extends Cubit<FavoriteState> {
             (favorites) {
           favoriteModel = favorites;
 
-          /// هنا نطبع قائمة المعرفات
           final favoriteIds = favorites.data?.map((e) => e.unitId).toList();
           print("favorite ids: $favoriteIds");
 
@@ -52,8 +51,8 @@ class FavoriteCubit extends Cubit<FavoriteState> {
     try {
       final result = await repository.deleteFavorite(unitId);
       result.fold(
-        (failure) => emit(DeleteFavoriteError(failure.errMessage)),
-        (message) => emit(DeleteFavoriteSuccess(message)),
+            (failure) => emit(DeleteFavoriteError(failure.errMessage)),
+            (message) => emit(DeleteFavoriteSuccess(message)),
       );
     } catch (e) {
       emit(FavoriteError(e.toString()));

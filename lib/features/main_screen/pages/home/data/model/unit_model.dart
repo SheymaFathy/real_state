@@ -12,7 +12,8 @@ class UnitModel {
   final String resourceLink;
   final String? developerPortfolio;
   String? description;
-  bool isFavorite = false;
+  bool isFavorite;
+  bool isFeatured;
 
   UnitModel({
     required this.id,
@@ -28,7 +29,8 @@ class UnitModel {
     required this.resourceLink,
     required this.developerPortfolio,
     this.description,
-    this.isFavorite = false,
+    required this.isFavorite,
+    required this.isFeatured,
   });
 
   factory UnitModel.fromJson(Map<String, dynamic> json) {
@@ -49,6 +51,7 @@ class UnitModel {
     }
 
     return UnitModel(
+      isFeatured: json['isFeatured'] ?? false,
       isFavorite: json['isFavorite'] ?? false,
       description : json['description'],
       id: json['id'] ?? 0,

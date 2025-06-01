@@ -7,6 +7,19 @@ class UnitCubit extends Cubit<UnitState> {
 
   UnitCubit(this.unitRepository) : super(UnitInitial());
 
+  // get featured units
+  // Future<void> fetchFeaturedUnits() async {
+  //   emit(UnitLoading());
+  //   try {
+  //     final units = await unitRepository.getAllUnits();
+  //     final featuredUnits = units.where((unit) => unit.isFeatured == true).toList();
+  //     emit(UnitLoaded(featuredUnits));
+  //   } catch (e) {
+  //     emit(UnitError(e.toString()));
+  //   }
+  // }
+
+
   // get all units
   Future<void> fetchUnits() async {
     emit(UnitLoading());

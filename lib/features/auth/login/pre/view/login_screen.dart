@@ -169,11 +169,16 @@ class LoginScreen extends StatelessWidget {
                               ],
                             ),
                             const SizedBox(height: 20),
+                            TextButton(onPressed: (){
+                              context.go(AppRoutes.mainScreen);
+                            }, child: TitleText(title: loc.translate("visit_as_guest")),
+                            )
                           ],
                         ),
                       ),
                     ),
                   ),
+
                 ],
               ),
             ),

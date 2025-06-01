@@ -77,7 +77,7 @@ class ProfileView extends StatelessWidget {
                               ),
                               trailing: Container(
                                 height: 36.h,
-                                width: 178.w,
+                                width: 150.w,
                                 padding: EdgeInsets.symmetric(horizontal: 12.w),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(40),
@@ -135,7 +135,7 @@ class ProfileView extends StatelessWidget {
                               ),
                               trailing: Container(
                                 height: 36.h,
-                                width: 178.w,
+                                width: 150.w,
                                 padding: EdgeInsets.symmetric(horizontal: 12.w),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(40),

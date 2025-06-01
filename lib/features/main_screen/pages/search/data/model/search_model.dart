@@ -23,6 +23,7 @@ class SearchModel {
     this.message,
     this.data,
     this.errors,
+
   });
 
   SearchModel.fromJson(Map<String, dynamic> json) {
@@ -76,6 +77,7 @@ class Data {
   String? user;
   String? userPhone;
   bool? isFeatured;
+  bool? isFavorite;
   List<String>? images;
 
   Data({
@@ -94,6 +96,7 @@ class Data {
     this.userPhone,
     this.isFeatured,
     this.images,
+    this.isFavorite,
   });
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -111,7 +114,7 @@ class Data {
     user = json['user'];
     userPhone = json['userPhone'];
     isFeatured = json['isFeatured'];
-
+    isFavorite = json['isFavorite'];
     if (json['images'] != null && json['images'] is List) {
       List rawImages = json['images'];
       images = rawImages

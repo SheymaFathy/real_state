@@ -55,6 +55,14 @@
   "number_of_bathrooms": "عدد الحمامات",
   "description": "الوصف",
   "portfolio": "معلومات المطور",
-  "url": "الرابط"
+  "url": "الرابط",
+  "to_add_favorite": "لإضافة الوحدة إلى المفضلة، يجب عليك تسجيل الدخول أولاً",
+  "visit_as_guest": "دخول كزائر",
+  "sort_by_price": "ترتيب حسب السعر",
+  "min_to_max_price": "من الأقل إلى الأعلى",
+  "max_to_min_price": "من الأعلى إلى الأقل",
+  "my_profile": "ملفي الشخصي",
+  "no_favorites": "لا توجد مفضلات حتى الآن",
+    "new_location": "موقع جديد"
 
 }

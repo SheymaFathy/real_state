@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:real_state/core/constants/colors.dart';
+import 'package:real_state/core/helper/context_extensions.dart';
 import 'package:real_state/features/auth/profile/pre/view/widget/profile_view.dart';
 import '../../../../../core/theme/theme_cubit.dart';
 import '../../../../../core/theme/theme_status.dart';
@@ -11,6 +12,7 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = context.loc;
     return BlocProvider(
       create: (_) => LogoutCubit(),
       child: BlocBuilder<ThemeCubit, ThemeState>(
@@ -24,7 +26,7 @@ class ProfilePage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text("My Profile"),
+                     Text(loc.translate("my_profile")),
                     BlocBuilder<LogoutCubit, LogoutState>(
                       builder: (context, state) {
                         if (state is LogoutLoading) {

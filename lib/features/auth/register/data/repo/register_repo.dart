@@ -6,13 +6,15 @@ import 'package:real_state/features/auth/register/data/model/register_user_model
 class RegisterRepository {
   Future<RegisterResponse> register(RegisterUserModel request) async {
     try {
+      print("Register JSON Body: ${request.toMap()}");
       final response = await DioHelper.postData(
         url: "Auth/register",
-        qurey: request.toMap(),
+        query: request.toMap(),
+
       );
       final user = RegisterResponse.fromJson(response.data);
 
-      if (user.statusCode == 200 || user.statusCode == 400) {
+      if (user.statusCode == 200|| user.statusCode == 400) {
         if (user.status == true) {
           print("Registration successful");
           print("Register Token ${user.data?[0].token}");

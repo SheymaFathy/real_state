@@ -42,7 +42,7 @@ class FavoriteRepository {
   }
 
   Future<Either<Failures, String>> deleteFavorite(int unitId) async {
-     try {
+    try {
       final response = await DioHelper.deleteData(
         url: "Favorite",
         qurey: {"unitId": unitId},

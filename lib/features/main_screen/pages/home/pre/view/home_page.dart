@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:real_state/features/main_screen/pages/home/pre/view/widgets/ads_card.dart';
+import 'package:real_state/features/main_screen/pages/home/pre/view/unit_details.dart';
+import 'package:real_state/features/main_screen/pages/home/pre/view/widgets/global_card.dart';
 import 'package:real_state/features/main_screen/pages/home/pre/view/widgets/hot_deal_row.dart';
 import 'package:real_state/features/main_screen/pages/home/pre/view/widgets/top_bar_widget.dart';
 import '../../../../../../core/app_localization/app_localization.dart';
@@ -45,7 +46,29 @@ class HomePage extends StatelessWidget {
                           scrollDirection: Axis.horizontal,
                           itemCount: state.units.length,
                           itemBuilder: (context, index) {
-                            return AdsCard(unit: state.units[index]);
+                            return GlobalCard(
+                                imageUrl: state.units[index].imageUrl,
+                                unitType: state.units[index].type.toString(),
+                                price: state.units[index].price,
+                                address: state.units[index].address.toString(),
+                                numOfRooms: state.units[index].numOfRooms,
+                                numOfBathrooms: state.units[index].numOfBathrooms,
+                                unitArea: state.units[index].unitArea.toString(),
+                                press: (){
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => UnitDetailsPage(unitId: state.units[index].id),
+                                    ),
+                                  );
+                                },
+                                unitId: state.units[index].id,
+                              unit: state.units[index],);
+
+
+
+                              // AdsCard(unit: state.units[index]);
+
                           },
                         );
                       }

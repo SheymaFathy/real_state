@@ -55,6 +55,14 @@
   "number_of_bathrooms": "Number of Bathrooms",
     "description": "Description",
   "portfolio": "Developer Portfolio",
-    "url": "URL"
+    "url": "URL",
+  "to_add_favorite": "To add the unit to favorites, you need to login first",
+    "visit_as_guest": "Visit as Guest",
+  "sort_by_price": "Sort by Price",
+  "min_to_max_price": "From Low to High price",
+    "max_to_min_price": "From High to Low price",
+  "my_profile": "My Profile",
+    "no_favorites": "No Favorites Yet",
+  "new_location": "New Location"
 
 }

@@ -16,15 +16,21 @@ class UnitRepository {
       if (response.statusCode == 200) {
         final decoded = json.decode(response.body);
         final List<dynamic> data = decoded["data"];
-        return data.map((json) => UnitModel.fromJson(json)).toList();
+
+        return data.map((json) {
+          print("Unit JSON: $json");
+          return UnitModel.fromJson(json);
+        }).toList();
+
       } else {
         throw Exception("فشل في جلب الوحدات: ${response.body}");
       }
     } catch (e) {
-      print("Error in getAllUnits → $e");
+      print(" Error in getAllUnits → $e");
       rethrow;
     }
   }
+
 
   // get hot deals
   Future<List<UnitModel>> getHotDeals() async {
