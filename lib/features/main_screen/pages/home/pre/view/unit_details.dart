@@ -82,85 +82,85 @@ class UnitDetailsPageState extends State<UnitDetailsPage> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: AdsDetailsCard(unit: unit),
                                   ),
-                                  Positioned(
-                                    top: 16,
-                                    right: 16,
-                                    child: BlocConsumer<FavoriteCubit, FavoriteState>(
-                                      listener: (context, favState) {
-                                        if (favState is FavoriteSuccess) {
-                                          setState(() {
-                                            unit.isFavorite = !unit.isFavorite;
-                                          });
-                                        }
-                                      },
-                                      builder: (context, favState) {
-                                        return Material(
-                                          color: Colors.transparent,
-                                          child: InkWell(
-                                            borderRadius: BorderRadius.circular(16),
-                                            onTap: () {
-                                              final token = CacheHelper.getSaveData(key: "token");
-                                              if (token != null && token.isNotEmpty) {
-                                                context
-                                                    .read<FavoriteCubit>()
-                                                    .addToFavorite(unit.id.toString());
-                                              } else {
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (context) => AlertDialog(
-                                                      backgroundColor: AppColors.backGround(context),
-                                                      title: TitleText(title: loc.translate("alert")),
-                                                      content: TitleText(title: loc.translate("to_add_favorite"),),
-                                                      shape: RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.circular(15),
-                                                      ),
-                                                      actions: [
-                                                        TextButton(
-                                                          onPressed: () => Navigator.pop(context),
-                                                          child: TitleText(title: loc.translate("cancel")),
-                                                        ),
-                                                        ElevatedButton(
-                                                          style: ElevatedButton.styleFrom(
-                                                            backgroundColor: AppColors.primary(context),
-                                                            shape: RoundedRectangleBorder(
-                                                              borderRadius: BorderRadius.circular(15),
-                                                            ),
-                                                          ),
-                                                          onPressed: () {
-                                                            context.go(AppRoutes.login);
-                                                          },
-                                                          child: TitleText(title: loc.translate("login"),),
-                                                        ),
-                                                      ],
-                                                    )
-                                                );
-                                              }
-                                            },
-                                            child: Container(
-                                              padding: const EdgeInsets.all(8.0),
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: Colors.white,
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.black.withOpacity(0.2),
-                                                    blurRadius: 4,
-                                                  ),
-                                                ],
-                                              ),
-                                              child: Icon(
-                                                unit.isFavorite
-                                                    ? Icons.favorite
-                                                    : Icons.favorite_border,
-                                                color: unit.isFavorite ? Colors.red : Colors.grey,
-                                                size: 24,
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
+                                  // Positioned(
+                                  //   top: 16,
+                                  //   right: 16,
+                                  //   child: BlocConsumer<FavoriteCubit, FavoriteState>(
+                                  //     listener: (context, favState) {
+                                  //       if (favState is FavoriteSuccess) {
+                                  //         setState(() {
+                                  //           unit.isFavorite = !unit.isFavorite;
+                                  //         });
+                                  //       }
+                                  //     },
+                                  //     builder: (context, favState) {
+                                  //       return Material(
+                                  //         color: Colors.transparent,
+                                  //         child: InkWell(
+                                  //           borderRadius: BorderRadius.circular(16),
+                                  //           onTap: () {
+                                  //             final token = CacheHelper.getSaveData(key: "token");
+                                  //             if (token != null && token.isNotEmpty) {
+                                  //               context
+                                  //                   .read<FavoriteCubit>()
+                                  //                   .addToFavorite(unit.id.toString());
+                                  //             } else {
+                                  //               showDialog(
+                                  //                   context: context,
+                                  //                   builder: (context) => AlertDialog(
+                                  //                     backgroundColor: AppColors.backGround(context),
+                                  //                     title: TitleText(title: loc.translate("alert")),
+                                  //                     content: TitleText(title: loc.translate("to_add_favorite"),),
+                                  //                     shape: RoundedRectangleBorder(
+                                  //                       borderRadius: BorderRadius.circular(15),
+                                  //                     ),
+                                  //                     actions: [
+                                  //                       TextButton(
+                                  //                         onPressed: () => Navigator.pop(context),
+                                  //                         child: TitleText(title: loc.translate("cancel")),
+                                  //                       ),
+                                  //                       ElevatedButton(
+                                  //                         style: ElevatedButton.styleFrom(
+                                  //                           backgroundColor: AppColors.primary(context),
+                                  //                           shape: RoundedRectangleBorder(
+                                  //                             borderRadius: BorderRadius.circular(15),
+                                  //                           ),
+                                  //                         ),
+                                  //                         onPressed: () {
+                                  //                           context.go(AppRoutes.login);
+                                  //                         },
+                                  //                         child: TitleText(title: loc.translate("login"),),
+                                  //                       ),
+                                  //                     ],
+                                  //                   )
+                                  //               );
+                                  //             }
+                                  //           },
+                                  //           child: Container(
+                                  //             padding: const EdgeInsets.all(8.0),
+                                  //             decoration: BoxDecoration(
+                                  //               shape: BoxShape.circle,
+                                  //               color: Colors.white,
+                                  //               boxShadow: [
+                                  //                 BoxShadow(
+                                  //                   color: Colors.black.withOpacity(0.2),
+                                  //                   blurRadius: 4,
+                                  //                 ),
+                                  //               ],
+                                  //             ),
+                                  //             child: Icon(
+                                  //               unit.isFavorite
+                                  //                   ? Icons.favorite
+                                  //                   : Icons.favorite_border,
+                                  //               color: unit.isFavorite ? Colors.red : Colors.grey,
+                                  //               size: 24,
+                                  //             ),
+                                  //           ),
+                                  //         ),
+                                  //       );
+                                  //     },
+                                  //   ),
+                                  // ),
                                 ],
                               );
                             } else if (state is UnitError) {

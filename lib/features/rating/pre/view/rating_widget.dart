@@ -33,19 +33,23 @@ class RatingWidgetState extends State<RatingWidget> {
           content: StatefulBuilder(
             builder: (context, setStateDialog) {
               return Row(
+                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(5, (index) {
-                  return IconButton(
-                    icon: Icon(
-                      index < selectedRating ? Icons.star : Icons.star_border,
-                      color: Colors.amber,
-                      size: 30,
-                    ),
-                    onPressed: () {
+                  return GestureDetector(
+                    onTap: () {
                       setStateDialog(() {
                         selectedRating = index + 1;
                       });
                     },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(
+                        index < selectedRating ? Icons.star : Icons.star_border,
+                        color: Colors.amber,
+                        size: 20,
+                      ),
+                    ),
                   );
                 }),
               );

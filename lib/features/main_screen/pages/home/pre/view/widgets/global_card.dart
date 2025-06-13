@@ -28,7 +28,7 @@ class GlobalCard extends StatefulWidget {
   final String unitArea;
   final VoidCallback press;
   final VoidCallback? onRemoveFavorite; // زرار إزالة المفضلة اختياري
-
+  final bool? isFavorite;
 
   const GlobalCard({
     super.key,
@@ -37,6 +37,7 @@ class GlobalCard extends StatefulWidget {
     required this.price,
     required this.address,
     required this.numOfRooms,
+    this.isFavorite = false,
     required this.numOfBathrooms,
     required this.unitArea,
     required this.press,
@@ -209,88 +210,125 @@ class _GlobalCardState extends State<GlobalCard> {
             top: 8.h,
             right: 8.w,
             left: 8.w,
-            child: BlocConsumer<FavoriteCubit, FavoriteState>(
+            child: BlocListener<FavoriteCubit, FavoriteState>(
+              listenWhen:
+                  (state, previousState) =>
+                      state is FavoriteSuccess || state is FavoriteError,
               listener: (context, state) {
                 if (state is FavoriteSuccess) {
-                  setState(() {});
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Added to favorites successfully"),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                } else if (state is FavoriteError) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Failed to update favorites"),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
                 }
               },
-              builder: (context, state) {
-                final isFavorite = widget.unit?.isFavorite ?? false;
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(16),
-                        child: Container(
-                          padding: const EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.backGround(context),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.black(context),
-                                blurRadius: 4,
-                              ),
-                            ],
-                          ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Favorite Icon
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.backGround(context),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.black(context),
+                              blurRadius: 4,
+                            ),
+                          ],
+                        ),
+                        child: GestureDetector(
+                          onTap: widget.onRemoveFavorite,
                           child: Icon(
-                            isFavorite ? Icons.favorite : Icons.favorite_border,
+                            widget.isFavorite!
+                                ? Icons.favorite
+                                : Icons.favorite_border,
                             color: Colors.red,
                             size: 24,
                           ),
                         ),
-                        onTap: () {
-                          final token = CacheHelper.getSaveData(key: "token");
+                      ),
+                      onTap: () {
+                        final token = CacheHelper.getSaveData(key: "token");
 
-                          if (token != null && token.isNotEmpty) {
-                            if (widget.unit != null) {
-                              if (!isFavorite) {
-                                context.read<FavoriteCubit>().addToFavorite(
-                                  widget.unit!.id.toString(),
-                                );
-                              } else {
-                                context.read<FavoriteCubit>().deleteFavorite(widget.unit!.id);
-                              }
+                        if (token != null && token.isNotEmpty) {
+                          if (widget.unit != null) {
+                            if (!widget.isFavorite!) {
+                              context.read<FavoriteCubit>().addToFavorite(
+                                widget.unit!.id.toString(),
+                              );
+                            } else {
+                              context.read<FavoriteCubit>().deleteFavorite(
+                                widget.unit!.id,
+                              );
                             }
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                backgroundColor: AppColors.backGround(context),
-                                title: TitleText(title: loc.translate("alert")),
-                                content: TitleText(title: loc.translate("to_add_favorite")),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: TitleText(title: loc.translate("cancel")),
+                          }
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder:
+                                (context) => AlertDialog(
+                                  backgroundColor: AppColors.backGround(
+                                    context,
                                   ),
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.primary(context),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(15),
+                                  title: TitleText(
+                                    title: loc.translate("alert"),
+                                  ),
+                                  content: TitleText(
+                                    title: loc.translate("to_add_favorite"),
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: TitleText(
+                                        title: loc.translate("cancel"),
                                       ),
                                     ),
-                                    onPressed: () {
-                                      context.go(AppRoutes.login);
-                                    },
-                                    child: TitleText(title: loc.translate("login")),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
-                        },
-                      ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColors.primary(
+                                          context,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            15,
+                                          ),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        context.go(AppRoutes.login);
+                                      },
+                                      child: TitleText(
+                                        title: loc.translate("login"),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                          );
+                        }
+                      },
                     ),
-                    // remove from favorite button
-                    if (widget.unit?.isFavorite ?? false)
+                  ),
+
+                  // Delete Favorite Icon
+                  if (widget.unit?.isFavorite ?? false)
                     Material(
                       color: Colors.transparent,
                       child: InkWell(
@@ -307,7 +345,7 @@ class _GlobalCardState extends State<GlobalCard> {
                               ),
                             ],
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.delete,
                             color: Colors.red,
                             size: 24,
@@ -315,17 +353,17 @@ class _GlobalCardState extends State<GlobalCard> {
                         ),
                         onTap: () {
                           if (widget.unit != null) {
-                            context.read<FavoriteCubit>().deleteFavorite(widget.unit!.id);
+                            context.read<FavoriteCubit>().deleteFavorite(
+                              widget.unit!.id,
+                            );
                           }
                         },
                       ),
                     ),
-                  ],
-                );
-              },
+                ],
+              ),
             ),
           ),
-
         ],
       ),
     );

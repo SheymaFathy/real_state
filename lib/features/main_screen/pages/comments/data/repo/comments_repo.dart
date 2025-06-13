@@ -1,16 +1,12 @@
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:real_state/core/dio/dio_helper.dart';
 import '../model/comments_model.dart';
 
 class CommentRepository {
   Future<void> postComment(CommentModel model) async {
-    const String url = 'https://propertyapi.runasp.net/Comments';
-
     try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(model.toJson()),
+      final response = await DioHelper.postData(
+        url: "Comments",
+        data: model.toJson(),
       );
 
       if (response.statusCode != 200 && response.statusCode != 201) {

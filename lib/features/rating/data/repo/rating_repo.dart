@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:real_state/core/dio/dio_helper.dart';
 import '../model/rating_model.dart';
 
 class RatingRepository {
@@ -9,8 +10,8 @@ class RatingRepository {
 
   Future<bool> submitRating(RatingModel rating) async {
     try {
-      final response = await dio.post(
-        'https://propertyapi.runasp.net/Ratings',
+      final response = await DioHelper.postData(
+        url: "Ratings",
         data: rating.toJson(),
       );
 

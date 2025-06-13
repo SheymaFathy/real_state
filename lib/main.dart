@@ -17,6 +17,8 @@ import 'package:real_state/features/main_screen/pages/home/data/repo/home_repo.d
 import 'package:real_state/features/main_screen/pages/home/pre/view_model/home_cubit.dart';
 import 'package:real_state/features/main_screen/pages/my_fav/data/repo/favorite_repo.dart';
 import 'package:real_state/features/main_screen/pages/my_fav/pre/view_model/my_favorite_cubit.dart';
+import 'package:real_state/features/rating/data/repo/rating_repo.dart';
+import 'package:real_state/features/rating/pre/view_model/rating_cubit.dart';
 import 'core/dio/dio_helper.dart';
 import 'features/main_screen/pages/comments/data/repo/comments_repo.dart';
 import 'features/main_screen/pages/comments/pre/view_model/comments_cubit.dart';
@@ -29,7 +31,6 @@ void main() async {
   await CacheHelper.init();
   DioHelper.init();
   final Locale systemLocale = PlatformDispatcher.instance.locale;
-
   runApp(MyApp(systemLocale: systemLocale));
 }
 
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<SearchCubit>(create: (_) => SearchCubit(SearchRepository())),
         BlocProvider<UnitCubit>(create: (_) => UnitCubit(UnitRepository())),
         BlocProvider<OnboardingCubit>(create: (_) => OnboardingCubit()),
+        BlocProvider<RatingCubit>(create: (_) => RatingCubit(RatingRepository())),
         BlocProvider<FavoriteCubit>(create: (_) => FavoriteCubit(FavoriteRepository())..getFavorite(),),
         BlocProvider<CommentCubit>(
           create: (_) => CommentCubit(commentRepository: CommentRepository()),
@@ -74,6 +76,7 @@ class MyApp extends StatelessWidget {
                     theme: lightTheme(context),
                     darkTheme: darkTheme(context),
                     themeMode: ThemeMode.system,
+
                   );
                 },
               );

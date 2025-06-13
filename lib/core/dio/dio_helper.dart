@@ -1,12 +1,20 @@
 // ignore_for_file: avoid_print
 
 import 'package:dio/dio.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import '../shared_preferences/cach_helper.dart';
 
 class DioHelper {
   static Dio? dio;
 
   static init() async {
+    dio?.interceptors.add(
+      (PrettyDioLogger(
+        requestHeader: true,
+        requestBody: true,
+        responseHeader: true,
+      )),
+    );
     dio = Dio(
       BaseOptions(
         baseUrl: "https://propertyapi.runasp.net/",
@@ -33,7 +41,7 @@ class DioHelper {
     Map<String, dynamic>? query,
     data,
   }) async {
-        return dio!.post(url, queryParameters: query, data: data);
+    return dio!.post(url, queryParameters: query, data: data);
   }
 
   static Future<Response> deleteData({

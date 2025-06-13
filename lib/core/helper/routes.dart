@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:real_state/core/shared_preferences/cach_helper.dart';
 import 'package:real_state/features/auth/login/pre/view/login_screen.dart';
 import 'package:real_state/features/auth/profile/pre/view/profile_page.dart';
 import 'package:real_state/features/auth/register/pre/view/sign_up.dart';
@@ -21,11 +22,22 @@ abstract class AppRoutes {
   static const String onboarding = '/';
 
   static final router = GoRouter(
+    initialLocation: '/',
+    redirect: (context, state) {
+      final token = CacheHelper.getSaveData(key: 'token');
+      print(token);
+      // لو عنده توكن -> يروح mainScreen
+      if (token != null) {
+        return AppRoutes.mainScreen;
+      }
+
+      // لو شاف onboarding قبل كده -> يروح logi
+
+      // الافتراضي -> onboarding
+      return null;
+    },
     routes: [
-      GoRoute(
-        path: splash,
-        builder: (context, state) => const SplashScreen(),
-      ),
+      GoRoute(path: splash, builder: (context, state) => const SplashScreen()),
 
       GoRoute(
         path: mainScreen,
@@ -44,26 +56,16 @@ abstract class AppRoutes {
         },
       ),
 
+      GoRoute(path: register, builder: (context, state) => SignUp()),
 
-      GoRoute(
-        path: register,
-        builder: (context, state) => SignUp(),
-      ),
-
-      GoRoute(
-        path: home,
-        builder: (context, state) => const HomePage(),
-      ),
+      GoRoute(path: home, builder: (context, state) => const HomePage()),
 
       GoRoute(
         path: myFavorite,
         builder: (context, state) => const MyFavorite(),
       ),
 
-      GoRoute(
-        path: profile,
-        builder: (context, state) => const ProfilePage(),
-      ),
+      GoRoute(path: profile, builder: (context, state) => const ProfilePage()),
 
       GoRoute(
         path: unitDetails,
@@ -80,4 +82,3 @@ abstract class AppRoutes {
     ],
   );
 }
-

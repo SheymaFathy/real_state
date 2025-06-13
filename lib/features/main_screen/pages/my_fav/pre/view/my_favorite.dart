@@ -79,7 +79,8 @@ class _MyFavoriteState extends State<MyFavorite> {
                   TopBarWidget(),
                   Expanded(
                     child: ListView.separated(
-                      separatorBuilder: (context, index) => const SizedBox(height: 10),
+                      separatorBuilder:
+                          (context, index) => const SizedBox(height: 10),
                       itemCount: favList.length,
                       itemBuilder: (context, index) {
                         return GlobalCard(
@@ -95,13 +96,19 @@ class _MyFavoriteState extends State<MyFavorite> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => UnitDetailsPage(unitId: unitId),
+                                builder:
+                                    (context) =>
+                                        UnitDetailsPage(unitId: unitId),
                               ),
                             );
                           },
                           unitId: favList[index].unitId,
+                          isFavorite: true,
                           onRemoveFavorite: () {
-                            context.read<FavoriteCubit>().deleteFavorite(favList[index].unitId);
+                            print(favList[index].unitId);
+                            context.read<FavoriteCubit>().deleteFavorite(
+                              favList[index].unitId,
+                            );
                           },
                         );
                       },
